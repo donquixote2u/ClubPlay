@@ -1,0 +1,2978 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="ttg.css">
+    <link rel="stylesheet" type="text/css" href="ttg-print.css">
+    <title>alracTTG</title>
+</head>
+<body style="text-align:center;margin-top:0;">
+    <div id="ttg_sticky" class="no-print"></div>
+    <div id="ttg_scroll"></div>
+    <div id="ttg_devel" style="display:none;">
+        <!-- used during development -->
+        <div class="no-print" id="ttg_compute_menu" style="display:none">
+            <input id="tournament" type="button" value="tournament" onclick=
+            "show_population(0,2,'ttg_tournament_high')"> <input id="mutate"
+            type="button" value="mutate" onclick="demo_mutate()"> <input id=
+            "cross" type="button" value="cross" onclick="demo_cross()">
+            <input id="ttg_crossmut" type="button" value="crossmut" onclick=
+            "cross_mutate()"> <input id="ttg_repeat_cross_mut" type="button"
+            value="repeat" onclick="repeat_cross_mutate()"> <input id=
+            "ttg_stop_cross_mut" type="button" value="stop" onclick=
+            "stop_cross_mutate()"> <input id="sort" type="button" value="sort"
+            onclick="demo_sort()"> <input id="graph" type="button" value=
+            "graph" onclick="graph_population()"> <input id="usage" type=
+            "button" value="courts_usage" onclick="demo_court_usage()">
+        </div>
+        <div class="no-print" id="ttg_error"></div>
+        <div id="ttg_graph_pop"></div>
+        <div id="ttg_tournament_high"></div>
+        <div id="ttg_meetings"></div>
+        <div id="ttg_tournament_low"></div>
+    </div>
+    <script src="ttg-globals.js"></script> 
+    <script src="jquery-3.4.1.min.js"></script> 
+    <script src="ttg-utils.js"></script> 
+    <script src="ttg-trans.js"></script> 
+    <script src="ttg-csv.js"></script> 
+    <script src="ttg-edit.js"></script> 
+    <script src="ttg-genetics.js"></script> 
+    <script src="ttg-data.js"></script> 
+    <script src="ttg-schedule.js"></script> 
+    <script src="ttg-text.js"></script> 
+    <script src="ttg-main.js"></script> 
+    <script src="ttg-score.js"></script> 
+    <script src="ttg-tabs.js"></script>
+    <pre id="ttg_trans" style="display:none;">
+// translation table
+// first entry of each paragraph must start with
+// tt:some text
+// The program uses the function tr() to get a translation as in:
+// x = tr('some text')
+// tt: defines the default text to be used when no translation is given
+// after the tt: line, translations follow, each preceded by the 
+// country code: NL:, DE:, etc.
+// example paragraph:
+//
+// tt:some text
+// NL:enige tekst
+// EN:some more text
+//
+// so, also an translation for English can be given
+// lines starting with // and empty lines are ignored
+//
+tt:This is alracTTG version
+DE:Dies ist alracTTG Version
+EN:This is alracTTG version
+ES:Esta es la versión alracTTG
+FI:Tämä on alracTTG versio
+FR:Ceci est la version alracTTG
+NL:Dit is alracTTG versie
+RU:Это alracTTG версия
+
+tt:DONATE
+NL:DONATIES
+DE:SPENDEN
+FR:DONNER
+ES:DONAR
+FI:LAHJOITTAA
+RU:ПОДДЕРЖИТЕ
+
+tt:Score board
+NL:Scorebord
+DE:Anzeigetafel
+FR:Tableau des scores
+ES:Tablero de puntuación
+FI:Tulostaulu
+RU:Табло
+
+tt:delete
+NL:verwijderen
+DE:löschen
+FR:supprimer
+ES:eliminar
+FI:poistaa
+RU:удалять
+
+tt:Games won
+NL:Gewonnen games
+DE:Spiele gewonnen
+FR:Jeux gagnés
+ES:Juegos ganados
+FI:Voitetut pelit
+RU:Игры выиграны
+
+tt:Points won - points lost
+NL:Gewonnen punten - verloren punten
+DE:Gewonnene Punkte - verlorene Punkte
+FR:Points gagnés - points perdus
+ES:Puntos ganados - puntos perdidos
+FI:Voitetut pisteet - menetetyt pisteet
+RU:Очки выиграны - очки потеряны
+
+tt:Sort final result by
+NL:Uiteindelijk resultaat sorteren op
+DE:Endergebnis sortieren nach
+FR:Trier le résultat final par
+ES:Ordenar resultado final por
+FI:Lajittele lopullinen tulos
+RU:Сортировать окончательный результат по
+
+tt:PRINT
+NL:PRINT
+DE:DRUCKEN
+FR:IMPRESSION
+ES:IMPRESIÓN
+FI:TULOSTA
+RU:РАСПЕЧАТАТЬ
+
+tt:PREVIEW
+NL:PREVIEW
+DE:VORSCHAU
+FR:APERÇU
+ES:AVANCE
+FI:ESIKATSELU
+RU:АНОНС
+
+tt:Lost
+NL:Verloren
+DE:Verloren
+FR:Perdue
+ES:Perdido
+FI:Menetetty
+RU:Потерянный
+
+tt:Draw
+NL:Gelijk
+DE:Unentschieden
+FR:Indécis
+ES:Indeciso
+FI:Ratkaisematta
+RU:НИЧЬЯ
+
+tt:Won
+NL:Gewonnen
+DE:Gewonnen
+FR:Gagné
+ES:Won
+FI:Won
+RU:Вона
+
+tt:Net
+NL:Netto
+DE:Net
+FR:Net
+ES:Neto
+FI:Netto
+RU:Сеть
+
+tt:Points
+NL:Punten
+DE:Punkte
+FR:Points
+ES:Puntos
+FI:Pistettä
+RU:Точки
+
+tt:Player
+NL:Speler
+DE:Spieler
+FR:Joueur
+ES:Jugador
+FI:Pelaaja
+RU:Игрок
+
+tt:Results per player
+NL:Resultaten per speler
+DE:Ergebnisse pro Spieler
+FR:Résultats par joueur
+ES:Resultados por jugador
+FI:Tulokset pelaajaa kohti
+RU:Результаты на игрока
+
+tt:You are about to delete all scores
+NL:U staat op het punt alle scores te wissen
+DE:Sie sind dabei, alle Partituren zu löschen
+FR:Vous êtes sur le point de supprimer tous les scores
+ES:Estás a punto de eliminar todas las puntuaciones
+FI:Olet poistamassa kaikki tulokset
+RU:Вы собираетесь удалить все результаты
+
+tt:Beware
+NL:Pas op
+DE:Achtung
+FR:Prendre garde
+ES:Tener cuidado
+FI:Ole varuillasi
+RU:Берегись
+
+tt:Erase anyway
+NL:Toch wissen
+DE:Trotzdem löschen
+FR:Effacer quand même
+ES:Borrar de todos modos
+FI:Poista kuitenkin
+RU:Стереть в любом случае
+
+tt:CLEAR
+NL:WISSEN
+DE:LÖSCHEN
+FR:EFFACER
+ES:ELIMINAR
+FI:PYYHKIÄ
+RU:ОЧИСТИТЬ
+
+tt:Illustration by
+NL:Illustratie door
+DE:Illustration von
+FR:Illustration de
+ES:Ilustración por
+FI:Kuva
+RU:Иллюстрация от
+
+tt:Tennis court overview
+NL:Tennisbaan overzicht
+DE:Tennisplatz-Übersicht
+FR:Aperçu des courts de tennis
+ES:Resumen de la cancha de tenis
+FI:Tenniskentän yleiskatsaus
+RU:Обзор теннисного корта
+
+tt:Players overview
+NL:Spelers overzicht
+DE:Spielerliste
+FR:Présentation des joueurs
+ES:Resumen de jugadores
+FI:Pelaajien yleiskatsaus
+RU:Обзор игроков
+
+tt:Play time overview
+NL:Speeltijd overzicht
+DE:Spielzeitübersicht
+FR:Aperçu du temps de jeu
+ES:Resumen del tiempo de juego
+FI:Peliajan yleiskatsaus
+RU:Обзор времени воспроизведения
+
+tt:Close this message
+NL:Sluit dit bericht
+DE:Diese Nachricht Schließen
+FR:Fermer ce message
+ES:Cierra este mensaje
+FI:Sulje tämä viesti
+RU:Закрыть это сообщение
+
+tt:%s unnecessary playing times not used
+NL:%s onnodige speeltijden niet gebruikt
+DE:%s unnötige Spielzeiten nicht genutzt
+FR:%s temps de jeu inutiles non utilisés
+ES:%s tiempos de juego innecesarios no utilizados
+FI:%s tarpeetonta peliaikaa ei käytetty
+RU:%s ненужных игровых времени не используются
+
+tt:One superfluous playing time is not used
+NL:Een overbodige speeltijd wordt niet gebruikt
+DE:Eine überflüssige Spielzeit wird nicht verwendet
+FR:Un temps de jeu superflu n'est pas utilisé
+ES:No se usa un tiempo de juego superfluo
+FI:Yhtä tarpeetonta peliaikaa ei käytetä
+RU:Одно лишнее игровое время не используется
+
+tt:These players meet each other more than once
+NL:Deze spelers ontmoeten elkaar meer dan één maal
+DE:Diese Spieler treffen sich mehr als einmal
+FR:Ces joueurs se rencontrent plus d'une fois
+ES:Estos jugadores se encuentran más de una vez
+FI:Nämä pelaajat tapaavat toisiaan useammin kuin kerran
+RU:Эти игроки встречаются друг с другом не раз
+
+tt:Uneven power ratios
+NL:Ongelijke krachtverhoudingen
+DE:Ungleiche Stärkeverhältnisse
+FR:Rapports de puissance inégaux
+ES:Relaciones de poder desiguales
+FI:Epätasaiset tehosuhteet
+RU:Неравномерное соотношение мощности
+
+tt:not balanced
+NL:niet in balans
+DE:nicht ausgeglichen
+FR:non équilibré
+ES:no equilibrado
+FI:ei ole tasapainossa
+RU:не сбалансирован
+
+tt:Click to end the computations
+NL:Klik om de berekening te beëindigen
+DE:Klicken Sie auf, um die Berechnung zu beenden
+FR:Cliquez pour terminer les calculs
+ES:Haga clic para finalizar los cálculos
+FI:Napsauta lopettaaksesi laskennan
+RU:Нажмите, чтобы завершить вычисления
+
+tt:Number of attempts
+NL:Aantal pogingen
+DE:Anzahl der Versuche
+FR:Nombre de Tentatives
+ES:Número de intentos
+FI:Yritysten määrä
+RU:Количество попыток
+
+tt:Misses
+NL:Missers
+DE:Fehler
+FR:Erreurs
+ES:Errores
+FI:Virheitä
+RU:Ошибка
+
+tt:Criterion
+NL:Criterium
+DE:Kriterium
+FR:Critère
+ES:Criterio
+FI:Kriteeri
+RU:Критерий
+
+tt:The best result so far, the fewer mistakes, the better
+NL:Het beste resultaat tot nu toe, hoe minder missers, hoe beter
+DE:Das bisher beste Ergebnis, je weniger Fehler, desto besser
+FR:Le meilleur résultat jusqu'à présent, moins il y a d'erreurs, mieux c'est
+ES:El mejor resultado hasta ahora, cuantos menos errores, mejor
+FI:Paras tulos toistaiseksi, mitä vähemmän virheitä, sitä parempi
+RU:Лучший результат на данный момент, чем меньше ошибок, тем лучше
+
+tt:Click to add a time
+NL:Klik om een tijd toe te voegen
+DE:Clicken Sie, om ein Zeit hinzuzufügen
+FR:Cliquez pour ajouter une heure
+ES:Haga clic para agregar una hora
+FI:Lisää aika napsauttamalla
+RU:Нажмите, чтобы добавить время
+
+tt:Click to permanently remove yellow times
+NL:Klik om de gele tijden definitief te verwijderen
+DE:Klicken Sie, um die gelben Zeiten dauerhaft zu entfernen
+FR:Cliquez pour supprimer définitivement les heures jaunes
+ES:Haga clic para eliminar permanentemente los tiempos amarillos
+FI:Poista keltaiset ajat pysyvästi napsauttamalla
+RU:Нажмите, чтобы навсегда удалить желтые времена
+
+tt:Click to sort by time
+NL:Klik om te sorteren op tijd
+DE:Klicken Sie, um nach Zeit zu sortieren
+FR:Cliquez pour trier par heure
+ES:Haga clic para ordenar por hora
+FI:Napsauta lajitellaksesi ajan mukaan
+RU:Нажмите, чтобы отсортировать по времени
+
+tt:Click to add a tennis court
+NL:Klik om een tennisbaan toe te voegen
+DE:Klicken Sie, um einen Tennisplatz hinzuzufügen
+FR:Cliquez pour ajouter un court de tennis
+ES:Haga clic para agregar una cancha de tenis
+FI:Napsauta lisätäksesi tenniskentän
+RU:Нажмите, чтобы добавить теннисный корт
+
+tt:Click to permanently remove the yellow tennis courts
+NL:Klik om de gele banen definitief te verwijderen
+DE:Klicken Sie, um die gelben Tennisplätze dauerhaft zu entfernen
+FR:Cliquez pour supprimer définitivement les courts de tennis jaunes
+ES:Haga clic para eliminar permanentemente las canchas de tenis amarillas
+FI:Napsauta poistaaksesi keltaiset tenniskentät pysyvästi
+RU:Нажмите, чтобы навсегда удалить желтые теннисные корты
+
+tt:Click to sort by name
+NL:Klik om te sorteren op naam
+DE:Klicken Sie, um nach Namen zu sortieren
+FR:Cliquez pour trier par nom
+ES:Haga clic para ordenar por nombre
+FI:Napsauta lajitellaksesi nimen mukaan
+RU:Нажмите, чтобы отсортировать по имени
+
+tt:Click to add a player
+NL:Klik om een speler toe te voegen
+DE:Klicken Sie, um einen Spieler hinzuzufügen
+FR:Cliquez pour ajouter un joueur
+ES:Haga clic para agregar un jugador
+FI:Napsauta lisätäksesi pelaajan
+RU:Нажмите, чтобы добавить игрока
+
+tt:Click to permanently remove the yellow players
+NL:Klik om de gele spelers permanent te verwijderen
+DE:Klicken Sie, um die gelben Spieler dauerhaft zu entfernen
+FR:Cliquez pour supprimer définitivement les joueurs jaunes
+ES:Haz clic para eliminar permanentemente a los jugadores amarillos
+FI:Napsauta poistaaksesi keltaiset pelaajat pysyvästi
+RU:Нажмите, чтобы навсегда удалить желтых игроков
+
+tt:Confirm delete
+NL:Bevestig delete
+DE:Bestätig delete
+FR:Confirmation de la suppression
+ES:Confirmar eliminación
+FI:Vahvista poistaminen
+RU:Подтвердите удаление
+
+tt:Click to sort by strength
+NL:Klik om te sorteren op sterkte
+DE:Klicken Sie, um nach Stärke zu sortieren
+FR:Cliquez pour trier par force
+ES:Haga clic para ordenar por fuerza
+FI:Napsauta lajitellaksesi vahvuuden mukaan
+RU:Нажмите, чтобы отсортировать по силе
+
+tt:Click to sort by gender
+NL:Klik om te sorteren op geslacht
+DE:Klicken Sie, um nach Geschlecht zu sortieren
+FR:Cliquez pour trier par sexe
+ES:Haga clic para ordenar por género
+FI:Napsauta lajitellaksesi sukupuolen mukaan
+RU:Нажмите, чтобы отсортировать по полу
+
+tt:Click to sort by last name
+NL:Klik om te sorteren op achternaam
+DE:Klicken Sie, um nach Nachnamen zu sortieren
+FR:Cliquez pour trier par nom de famille
+ES:Haga clic para ordenar por apellido
+FI:Napsauta lajitellaksesi sukunimen mukaan
+RU:Нажмите, чтобы отсортировать по фамилии
+
+tt:Click to sort by first name
+NL:Klik om te sorteren op voornaam
+DE:Klicken Sie, um nach Vorname zu sortieren
+FR:Cliquez pour trier par prénom
+ES:Haga clic para ordenar por nombre
+FI:Napsauta lajitellaksesi etunimen mukaan
+RU:Нажмите, чтобы отсортировать по имени
+
+tt:Number of rounds
+NL:Aantal ronden
+DE:Anzahl der Runden
+FR:Nombre de tours
+ES:Numero de rondas
+FI:NKierrosten lukumäärä
+RU:Количество раундов
+
+tt:Single or double
+NL:Single of double
+DE:Einzel oder Doppel
+FR:Simple ou double
+ES:Individual o doble
+FI:Yhden tai kahden hengen
+RU:Одиночный или двойной
+
+tt:Title
+NL:Titel
+DE:Titel
+FR:Titre
+ES:Título
+FI:Otsikko
+RU:Заглавие
+
+tt:Time
+NL:Tijd
+DE:Zeit
+FR:Temps
+ES:Hora
+FI:Aika
+RU:Время
+
+tt:Play times and available tennis courts
+NL:Speeltijden en beschikbare tennisbanen
+DE:Spielzeiten und verfügbare Tennisplätze
+FR:Heures de jeu et courts de tennis disponibles
+ES:Horas de juego y canchas de tenis disponibles
+FI:Peliajat ja käytettävissä olevat tenniskentät
+RU:Время игры и доступные теннисные корты
+
+tt:Tennis courts
+NL:Tennisbanen
+DE:Tennisplätze
+FR:Terrain de tennis
+ES:Canchas de tenis
+FI:Tenniskentät
+RU:Теннисный корт
+
+tt:How heavily does something have to weigh when creating the tournament?
+NL:Hoe zwaar moet iets wegen bij het maken van het toernooi?
+DE:Wie schwer muss etwas bei der Erstellung des Turniers sein?
+FR:Quel poids quelque chose doit-il peser lors de la création du tournoi?
+ES:¿Cuánto tiene que pesar algo al crear el torneo?
+FI:Kuinka voimakkaasti jonkun on punnittava turnauksen luomisessa?
+RU:Насколько сильно что-то должно весить при создании турнира?
+
+tt:Do you want to start over
+NL:Wilt u overnieuw beginnen
+DE:Wollen Sie von vorne anfangen
+FR:Voulez-vous recommencer
+ES:¿Quieres empezar de nuevo
+FI:Haluatko aloittaa alusta
+RU:Хотите начать все сначала
+
+tt:For example
+NL:Bijvoorbeeld
+DE:Zum Beispiel
+FR:Par example
+ES:Por ejemplo
+FI:Esimerkiksi
+RU:Например
+
+tt:Click one of the buttons in the yellow bar to continue
+NL:Klik een van de knoppen in de gele balk on verder te gaan
+DE:Klicken Sie auf eine der Schaltflächen in der gelben Leiste, um fortzufahren
+FR:Cliquez sur l'un des boutons de la barre jaune pour continuer
+ES:Haga clic en uno de los botones de la barra amarilla para continuar
+FI:Napsauta yhtä keltaisen palkin painikkeista jatkaaksesi
+RU:Нажмите одну из кнопок на желтой панели, чтобы продолжить
+
+tt:You have already entered or changed data but have not yet saved it.
+NL:U hebt al gegevens ingevoerd of veranderd maar nog niet bewaard.
+DE:Sie haben bereits Daten eingegeben oder geändert, diese aber noch nicht gespeichert.
+FR:Vous avez déjà saisi ou modifié des données mais ne les avez pas encore enregistrées.
+ES:Ya ha ingresado o cambiado datos pero aún no los ha guardado.
+FI:Olet jo syöttänyt tai muuttanut tietoja, mutta et ole vielä tallentanut niitä.
+RU:Вы уже ввели или изменили данные, но еще не сохранили их.
+
+tt:Make your choice
+NL:Maak uw keuze
+DE:Treffen Sie Ihre Wahl
+FR:Faites votre choix
+ES:Haz tu elección
+FI:Tee valintasi
+RU:Сделай свой выбор
+
+tt:Compile your tournament with a form
+NL:Stel met een formulier uw toernooi samen
+DE:Stellen Sie Ihr Turnier mit einem Formular zusammen
+FR:Compilez votre tournoi avec un formulaire
+ES:Compila tu torneo con un formulario
+FI:Kokoa turnauksesi lomakkeella
+RU:Скомпилируйте ваш турнир с помощью формы
+
+tt:Import a previously saved tournament
+NL:Importeer een eerder opgeslagen toernooi
+DE:Importiere ein zuvor gespeichertes Turnier
+FR:Importer un tournoi précédemment enregistré
+ES:Importar un torneo previamente guardado
+FI:Tuo aiemmin tallennettu turnaus
+RU:Импортировать ранее сохраненный турнир
+
+tt:YES
+NL:JA
+DE:JA
+FR:OUI
+ES:SI
+FI:JOO
+RU:ДА
+
+tt:The number of available tennis courts is zero
+NL:Het aantal beschikbare tennisvelden is nul
+DE:Die Anzahl der verfügbaren Tennisplätze ist Null
+FR:Le nombre de courts de tennis disponibles est nul
+ES:El número de canchas de tenis disponibles es cero
+FI:Käytettävissä olevia tenniskenttiä on nolla
+RU:Количество доступных теннисных кортов равно нулю
+
+tt:The number of tennis courts is zero
+NL:Het aantal tennisvelden is nul
+DE:Die Anzahl der Tennisplätze ist Null
+FR:Le nombre de courts de tennis est nul
+ES:El número de canchas de tenis es cero
+FI:Tenniskenttiä on nolla
+RU:Количество теннисных кортов равно нулю
+
+tt:The number of playing times is zero
+NL:Het aantal speeltijden is nul
+DE:Die Anzahl der Spielzeiten ist Null
+FR:Le nombre de temps de jeu est nul
+ES:El número de tiempos de juego es cero
+FI:Peliaikojen lukumäärä on nolla
+RU:Количество игровых времен равно нулю
+
+tt:correct this in
+NL:corrigeer dit in
+DE:korrigieren Sie dies in
+FR:corriger cela dans
+ES:corregir esto en
+FI:korjaa tämä
+RU:исправить это в
+
+tt:Click to improve the result
+NL:Klik om het resultaat te verbeteren
+DE:Klicken Sie, um das Ergebnis zu verbessern
+FR:Cliquez pour améliorer le résultat
+ES:Haga clic para mejorar el resultado
+FI:Paranna tulosta napsauttamalla
+RU:Нажмите, чтобы улучшить результат
+
+tt:double
+NL:double
+DE:double
+FR:double
+ES:double
+FI:double
+RU:двойной
+
+tt:Example tournament with
+NL:Voorbeeld toernooi met
+DE:Beispielturnier mit
+FR:Exemple de tournoi avec
+ES:Torneo de ejemplo con
+FI:Esimerkki turnauksesta
+RU:Пример турнира с
+
+tt:EDIT
+NL:BEWERKEN
+DE:BEARBEITEN
+FR:ÉDITER
+ES:EDITAR
+FI:MUOKATA
+RU:РЕДАКТИРОВАТЬ
+
+tt:m_start
+NL:START
+DE:STARTEN
+FR:DÉBUT
+ES:COMIENZO
+FI:ALKAA
+EN:START
+RU:СТАРТ
+
+tt:m_edit
+NL:BEWERKEN
+DE:BEARBEITEN
+FR:ÉDITER
+ES:EDITAR
+FI:MUOKATA
+EN:EDIT
+RU:РЕДАКТИРОВАТЬ
+
+tt:m_example
+NL:VOORBEELD
+DE:BEISPIEL
+FR:EXEMPLE
+ES:EJEMPLO
+FI:ESIMERKKI
+EN:EXAMPLE
+RU:ПРИМЕР
+
+tt:m_help
+NL:HELP
+DE:HILFE
+FR:ASSISTANCE
+ES:AYUDA
+FI:APU
+EN:HELP
+RU:ПОМОГИТЕ
+
+//tt:m_about
+//NL:over&nbsp;alracTTG
+//DE:über&nbsp;alracTTG
+//FR:à&nbsp;propos&nbsp;d'alracTTG
+//ES:acerca&nbsp;de&nbsp;alracTTG
+//FI:alracTTG:&nbsp;stä
+//EN:about&nbsp;alracTTG
+//RU:о&nbsp;alracTTG
+
+tt:m_about
+NL:OVER
+DE:ÜBER
+FR:À&nbsp;PROPOS
+ES:ACERCA
+FI:SUHTEESSA
+EN:ABOUT
+RU:О&nbsp;TTG
+
+tt:m_export
+NL:OPSLAAN
+DE:SPEICHERN
+FR:SAUVER
+ES:SALVAR
+FI:PELASTAA
+EN:SAVE
+RU:СОХРАНИТЬ
+
+tt:SAVE
+NL:OPSLAAN
+DE:SPEICHERN
+FR:SAUVER
+ES:SALVAR
+FI:PELASTAA
+RU:СОХРАНИТЬ
+
+tt:m_import
+NL:IMPORTEREN
+DE:IMPORTIEREN
+FR:IMPORTER
+ES:IMPORTAR
+FI:TUODA
+EN:IMPORT
+RU:ИМПОРТ
+
+tt:m_optimize
+NL:OPTIMALISEREN
+DE:OPTIMIEREN
+FR:OPTIMISER
+ES:OPTIMIZAR
+FI:OPTIMOIDA
+EN:OPTIMIZE
+RU:ОПТИМИЗАЦИЯ
+
+tt:m_scheme
+NL:SCHEMA'S
+DE:ZEITPLÄNE
+FR:CALENDRIER
+ES:HORARIO
+FI:AIKATAULUT
+EN:SCHEDULES
+RU:РАСПИСАНИЯ
+
+tt:SCHEDULES
+NL:SCHEMA'S
+DE:ZEITPLÄNE
+FR:CALENDRIER
+ES:HORARIO
+FI:AIKATAULUT
+RU:РАСПИСАНИЯ
+
+tt:m_score_board
+NL:SCOREBORD
+DE:ANZEIGETAFEL
+FR:TABLEAU&nbsp;DES&nbsp;SCORES
+ES:TABLA&nbsp;DE&nbsp;PUNTUACIONES
+FI:TULOSTAULU
+EN:SCORE&nbsp;BOARD
+RU:ТАБЛО
+
+tt:SCORE BOARD
+NL:SCOREBORD
+DE:ANZEIGETAFEL
+FR:TABLEAU DES SCORES
+ES:TABLA DE PUNTUACIONES
+FI:TULOSTAULU
+RU:ТАБЛО
+
+tt:m_clear
+EN:CLEAR
+NL:WISSEN
+DE:LÖSCHEN
+FR:EFFACER
+ES:ELIMINAR
+FI:PYYHKIÄ
+RU:ОЧИСТИТЬ
+
+tt:m_undo
+EN:UNDO
+NL:UNDO
+DE:UNDO
+FR:DÉFAIRE
+ES:DESHACER
+FI:KUMOA
+RU:UNDO
+
+tt:m_redo
+EN:REDO
+NL:REDO
+DE:REDO
+FR:REFAIRE
+ES:REHACER
+FI:REDO
+RU:REDO
+
+tt:m_preview
+EN:PREVIEW
+NL:PREVIEW
+DE:VORSCHAU
+FR:APERÇU
+ES:AVANCE
+FI:ESIKATSELU
+RU:АНОНС
+
+tt:m_print
+EN:PRINT
+NL:PRINT
+DE:DRUCKEN
+FR:IMPRESSION
+ES:IMPRESIÓN
+FI:TULOSTA
+RU:РАСПЕЧАТАТЬ
+
+tt:m_improve
+EN:IMPROVE
+NL:VERBETEREN
+DE:VERBESSERN
+FR:AMÉLIORER
+ES:MEJORAR
+FI:PARANTAA
+RU:УЛУЧШЕНИЯ
+
+tt:games per player
+NL:games per speler
+DE:Spielen pro Spieler
+FR:matchs par joueur
+ES:juegos por jugador
+FI:pelejä pelaajaa kohti
+RU:игры на игрока
+
+tt:important
+NL:belangrijk
+DE:wichtig
+FR:important
+ES:importante
+FI:tärkeä
+RU:важный
+
+tt:Import a saved tournament
+NL:Importeer een opgeslagen toernooi
+DE:Importiere ein gespeichertes Turnier
+FR:Importer un tournoi enregistré
+ES:Importar un torneo guardado
+FI:Tuo tallennettu turnaus
+RU:Импортировать сохраненный турнир
+
+tt:Lots of fun
+NL:Veel plezier
+DE:Viel spaß
+FR:Beaucoup d'amusement
+ES:Mucha diversión
+FI:Hauskaa
+RU:Много веселья
+
+
+tt:m
+NL:m
+DE:m
+FR:h
+ES:m
+FI:m
+RU:м
+
+//tt:m
+//EN:&#9794;
+
+tt:f
+NL:v
+DE:f
+FR:f
+ES:f
+FI:f
+RU:ж
+
+//tt:f
+//EN:&#9792;
+
+//tt:m/f
+//NL:m/v
+//DE:m/f
+//FR:h/f
+//ES:m/f
+//FI:m/f
+//RU:м/ж
+
+tt:m/f
+EN:&#9794; &#9792;
+
+tt:Name
+NL:Naam
+DE:Name
+FR:Nom
+ES:Nombre
+FI:Nimi
+RU:Имя
+
+tt:No
+NL:Nr
+DE:Nr
+FR:No
+ES:No
+FI:Nro
+RU:№
+
+tt:IMPROVE
+NL:VERBETEREN
+DE:VERBESSERN
+FR:AMÉLIORER
+ES:MEJORAR
+FI:PARANTAA
+RU:УЛУЧШЕНИЯ
+
+tt:Click to show the schedule
+NL:Klik om het schema te tonen
+DE:Klicken Sie hier, um den Plan anzuzeigen
+FR:Cliquez pour afficher le calendrier
+ES:Haga clic para mostrar el horario
+FI:Napsauta näyttääksesi aikataulun
+RU:Нажмите, чтобы показать расписание
+
+tt:Players
+NL:Spelers
+DE:Spieler
+FR:Joueurs
+ES:Jugadores
+FI:Pelaajat
+RU:Игроки
+
+tt:players
+NL:spelers
+DE:Spieler
+FR:joueurs
+ES:jugadores
+FI:pelaajat
+RU:игроки
+
+tt:Play times and courts
+NL:Speeltijden en banen
+DE:Spielzeiten und Tennisplätze
+FR:Heures de jeu et courts de tennis
+ES:Tiempos de juego y canchas
+FI:Peliajat ja tuomioistuimet
+RU:Время игры и корты
+
+tt:Ready
+NL:Gereed
+DE:Fertig
+FR:Prêt
+ES:Listo
+FI:Valmis
+RU:Готов
+
+tt:Rounds
+NL:Ronden
+DE:Runden
+FR:Tours
+ES:Rondas
+FI:Kierrosta
+RU:круглый
+
+tt:Round
+NL:Ronde
+DE:Runde
+FR:Tour
+ES:Ronda
+FI:Kierros
+RU:круглый
+
+tt:same player
+NL:zelfde speler
+DE:gleicher Spieler
+FR:même joueur
+ES:mismo jugador
+FI:sama pelaaja
+RU:тот же игрок
+
+tt:Same player
+NL:Zelfde speler
+DE:Gleicher Spieler
+FR:Même joueur
+ES:Mismo jugador
+FI:Sama pelaaja
+RU:Тот же игрок
+
+tt:single
+NL:single
+DE:single
+FR:simple
+ES:individual
+FI:yksilö
+RU:одиночный
+
+tt:Strength
+NL:Sterkte
+DE:Stärke
+FR:Force
+ES:Fuerza
+FI:Vahvuus
+RU:Прочность
+
+tt:strength
+NL:sterkte
+DE:Stärke
+FR:force
+ES:fuerza
+FI:vahvuus
+RU:прочность
+
+tt:Surname
+NL:Achternaam
+DE:Nachname
+FR:Nom de famille
+ES:Apellido
+FI:Sukunimi
+RU:Фамилия
+
+tt:tennis courts
+NL:tennisbanen
+DE:Tennisplätze
+FR:courts de tennis
+ES:Canchas de tenis
+FI:tenniskentät
+RU:теннисные корты
+
+tt:Tennis Tournament Generator
+NL:Tennis Toernooi Generator
+DE:Tennis Turnier Generator
+FR:Générateur de tournois de tennis
+ES:Generador de torneos de tenis
+FI:Tennis-turnausgeneraattori
+RU:Генератор теннисных турниров
+
+tt:Type of game
+NL:Type spel
+DE:Art des Spiels
+FR:Type de jeu
+ES:Tipo de juego
+FI:Pelityyppi
+RU:Тип игры
+
+tt:unimportant
+NL:onbelangrijk
+DE:unwichtig
+FR:sans importance
+ES:sin importancia
+FI:merkityksetön
+RU:неважный
+
+tt:very important
+NL:zeer belangrijk
+DE:sehr wichtig
+FR:très important
+ES:muy importante
+FI:hyvin tärkeä
+RU:очень важно
+
+tt:Weighting factors
+NL:Wegingsfactoren
+DE:Gewichtungsfaktoren
+FR:Facteurs de pondération
+ES:Factores de ponderación
+FI:Painotuskertoimet
+RU:Весовые коэффициенты
+
+tt:You can put together your tennis tournament with this tool
+NL:Met dit gereedschap stelt u uw tennistoernooi samen
+DE:Mit diesem Tool können Sie Ihr Tennisturnier zusammenstellen
+FR:Vous pouvez organiser votre tournoi de tennis avec cet outil
+ES:Puedes armar tu torneo de tenis con esta herramienta
+FI:Voit koota tennisturnauksesi tällä työkalulla
+RU:Вы можете собрать свой теннисный турнир с помощью этого инструмента
+
+tt:Enter the general information here
+NL:Vul hier de algemene gegevens in
+DE:Geben Sie hier die allgemeinen Informationen ein
+FR:Entrez les informations générales ici
+ES:Ingrese la información general aquí
+FI:Kirjoita yleiset tiedot tähän
+RU:Введите общую информацию здесь
+
+tt:Enter the information about the players here
+NL:Vul hier de gegevens over de spelers in
+DE:Geben Sie hier die Informationen zu den Spielern ein
+FR:Entrez les informations sur les joueurs ici
+ES:Ingrese la información sobre los jugadores aquí
+FI:Kirjoita pelaajien tiedot tähän
+RU:Введите информацию об игроках здесь
+
+tt:Define the weight factors here
+NL:Definieer hier de weegfactoren
+DE:Definieren Sie hier die Gewichtsfaktoren
+FR:Définissez ici les facteurs de pondération
+ES:Defina los factores de peso aquí
+FI:Määritä painokertoimet täällä
+RU:Определите весовые коэффициенты здесь
+
+tt:Enter the names of the tennis courts here
+NL:Vul hier de namen van de tennisbanen in
+DE:Geben Sie hier die Namen der Tennisplätze ein
+FR:Entrez les noms des courts de tennis ici
+ES:Ingrese los nombres de las canchas de tenis aquí
+FI:Kirjoita tenniskenttien nimet tähän
+RU:Введите названия теннисных кортов здесь
+
+tt:Enter the playing times here, and determine which courts are available during those playing times
+NL:Vul hier de speeltijden in, en bepaal welke banen er beschikbaar zijn gedurende die speeltijden
+DE:Geben Sie hier die Spielzeiten ein und bestimmen Sie, welche Plätze während dieser Spielzeiten verfügbar sind
+FR:Entrez les temps de jeu ici et déterminez quels cours sont disponibles pendant ces temps de jeu
+ES:Ingrese los tiempos de juego aquí y determine qué cursos están disponibles durante esos tiempos de juego
+FI:Kirjoita peliajat tähän ja määritä, mitkä kurssit ovat käytettävissä kyseisillä peliaikoilla
+RU:Введите здесь время игры и определите, какие курсы доступны в это время
+
+tt:Record the results of the games played here
+NL:Noteer hier de uitslagen van de gespeelde games
+DE:Hier können Sie die Ergebnisse der gespielten Spiele aufzeichnen
+FR:Enregistrez les résultats des matchs joués ici
+ES:Registra los resultados de los juegos jugados aquí
+FI:Tallenna täällä pelattujen pelien tulokset
+RU:Запишите результаты игр, сыгранных здесь
+
+tt:Tip: With the example you can get to know the program.
+EN:With the example you can get to know the program.
+NL:Met het voorbeeld kunt u het programma leren kennen.
+DE:Anhand des Beispiels können Sie das Programm kennenlernen.
+FR:Avec l'exemple, vous pouvez apprendre à connaître le programme.
+ES:Con el ejemplo, puedes conocer el programa.
+FI:Esimerkillä voit tutustua ohjelmaan.
+RU:На примере вы можете ознакомиться с программой.
+
+tt:You are going to start the editor, but you have already changed the score board.
+NL:U staat op het punt de editor starten, maar u hebt het scorebord al gewijzigd.
+DE:Sie sind dabei, den Editor zu starten, haben aber die Anzeigetafel bereits geändert.
+FR:Vous allez démarrer l'éditeur, mais vous avez déjà changé le tableau des scores.
+ES:Va a iniciar el editor, pero ya ha cambiado el marcador.
+FI:Aiot aloittaa editorin, mutta olet jo vaihtanut tulostaulua.
+RU:Вы собираетесь запустить редактор, но вы уже изменили табло.
+
+tt:All scores will be deleted if you continue.
+NL:Alle scores worden verwijderd als u doorgaat.
+DE:Alle Partituren werden gelöscht, wenn Sie fortfahren.
+FR:Tous les scores seront supprimés si vous continuez.
+ES:Todos los puntajes se eliminarán si continúa.
+FI:Kaikki tulokset poistetaan, jos jatkat.
+RU:Все результаты будут удалены, если вы продолжите.
+
+tt:Continue anyway
+NL:Ga toch door
+DE:Mache trotzdem weiter
+FR:Continuez quand même
+ES:De todas maneras, continúe
+FI:Jatka joka tapauksessa
+RU:Все равно продолжить
+
+tt:Note: the number of players must be divisible by four
+NL:Let op: het aantal spelers moet deelbaar zijn door vier
+DE:Hinweis: Die Anzahl der Spieler muss durch vier teilbar sein
+FR:Remarque: le nombre de joueurs doit être divisible par quatre
+ES:Nota: el número de jugadores debe ser divisible por cuatro
+FI:Huomaa: pelaajien lukumäärän on oltava jaollinen neljällä
+RU:Примечание: количество игроков должно делиться на четыре
+
+tt:Court 1
+NL:Baan 1
+DE:Platz 1
+FR:Cour 1
+ES:Corte 1
+FI:Tuomioistuin 1
+RU:Суд 1
+
+tt:Court 2
+NL:Baan 2
+DE:Platz 2
+FR:Cour 2
+ES:Corte 2
+FI:Tuomioistuin 2
+RU:Суд 2
+
+tt:Court 3
+NL:Baan 3
+DE:Platz 3
+FR:Cour 3
+ES:Corte 3
+FI:Tuomioistuin 3
+RU:Суд 3
+
+tt:Court 4
+NL:Baan 4
+DE:Platz 4
+FR:Cour 4
+ES:Corte 4
+FI:Tuomioistuin 4
+RU:Суд 4
+
+tt:Court 5
+NL:Baan 5
+DE:Platz 5
+FR:Cour 5
+ES:Corte 5
+FI:Tuomioistuin 5
+RU:Суд 5
+
+tt:Center Court
+NL:Center Court
+DE:Center Court
+FR:Court Central
+ES:Cancha central
+FI:Keskusoikeus
+RU:Центральный Корт
+
+tt:Click the button to import a previously saved tournament.
+NL:Klik op de knop om een eerder opgeslagen toernooi te importeren.
+DE:Klicken Sie auf die Schaltfläche, um ein zuvor gespeichertes Turnier zu importieren.
+FR:Cliquez sur le bouton pour importer un tournoi précédemment enregistré.
+ES:Haz clic en el botón para importar un torneo previamente guardado.
+FI:Napsauta painiketta tuodaksesi aiemmin tallennetun turnauksen.
+RU:Нажмите кнопку, чтобы импортировать ранее сохраненный турнир.
+
+tt:Warning: the tournament has not been saved yet.
+NL:Waarschuwing: het toernooi is nog niet opgeslagen.
+DE:Achtung: Das Turnier wurde noch nicht gespeichert.
+FR:Attention: le tournoi n'a pas encore été enregistré.
+ES:Advertencia: el torneo aún no se ha guardado.
+FI:Varoitus: turnausta ei ole vielä tallennettu.
+RU:Предупреждение: турнир еще не сохранен.
+
+tt:Tip: to save your tournament, click
+EN:&rArr; To save your tournament, click
+NL:&rArr; Om uw toernooi op te slaan, klik
+DE:&rArr; Um Ihr Turnier zu speichern, klicken Sie
+FR:&rArr; Pour enregistrer votre tournoi, cliquez sur
+ES:&rArr; Para guardar tu torneo, haz clic en
+FI:&rArr; Tallenna turnaus napsauttamalla
+RU:&rArr; Чтобы сохранить турнир, нажмите
+
+tt:Tip: adjust this in
+EN:Adjust this in
+NL:Pas dit aan in
+DE:Passen Sie dies an unter
+FR:Ajustez ceci dans
+ES:Ajuste esto en
+FI:Säädä tämä sisään
+RU:Настройте это в
+
+tt:Advice: use Landscape lay-out.
+NL:Advies: gebruik Liggende (Landscape) indeling.
+DE:Hinweis: Verwenden Sie das Landschaftslayout.
+FR:Conseil: utilisez la disposition Paysage.
+ES:Consejo: utilice el diseño del paisaje.
+FI:Ohje: käytä Maisema-asettelua.
+RU:Совет: используйте альбомную планировку.
+
+tt:OK
+NL:OK
+DE:in Ordnung
+FR:D'accord
+ES:Okay
+FI:Kunnossa
+RU:OK
+
+tt:Advice: use Portrait lay-out.
+NL:Advies: gebruik de Staande (Portret) indeling.
+DE:Hinweis: Verwenden Sie das Portrait-Layout.
+FR:Conseil: utilisez la mise en page Portrait.
+ES:Advice: use Portrait lay-out.
+FI:Ohje: käytä muotokuvamuotoa.
+RU:Совет: используйте портретную планировку.
+
+tt:You can also click one of the buttons in the yellow bar to continue with the current tournament.
+NL:U kunt ook een van de knoppen in de gele balk klikken om door te gaan met het huidige toernooi.
+DE:Sie können auch auf eine der Schaltflächen in der gelben Leiste klicken, um mit dem aktuellen Turnier fortzufahren.
+FR:Vous pouvez également cliquer sur l'un des boutons de la barre jaune pour poursuivre le tournoi en cours.
+ES:También puedes hacer clic en uno de los botones de la barra amarilla para continuar con el torneo actual.
+FI:Voit myös napsauttaa yhtä keltaisen palkin painikkeista jatkaaksesi nykyistä turnausta.
+RU:Вы также можете нажать одну из кнопок на желтой панели, чтобы продолжить текущий турнир.
+
+tt:UNDO
+NL:UNDO
+DE:UNDO
+FR:DÉFAIRE
+ES:DESHACER
+FI:KUMOA
+RU:UNDO
+
+tt:REDO
+NL:REDO
+DE:REDO
+FR:REFAIRE
+ES:REHACER
+FI:REDO
+RU:REDO
+
+tt:UNDO/REDO
+NL:UNDO/REDO
+DE:UNDO/REDO
+FR:DÉFAIRE/REFAIRE
+ES:DESHACER/REHACER
+FI:KUMOA/REDO
+RU:UNDO/REDO
+
+tt:Start your session by composing or importing a tournament.
+NL:Begin uw sessie door een toernooi samen te stellen of te importeren.
+DE:Starten Sie Ihre Sitzung, indem Sie ein Turnier zusammenstellen oder importieren.
+FR:Commencez votre session en composant ou en important un tournoi.
+ES:Comienza tu sesión componiendo o importando un torneo.
+FI:Aloita istunto säveltämällä tai tuomalla turnaus.
+RU:Начните сессию, составив или импортировав турнир.
+
+tt:Edit the details of the tournament.
+NL:Bewerk de gegevens van het toernooi.
+DE:Bearbeiten Sie die Details des Turniers.
+FR:Modifiez les détails du tournoi.
+ES:Edita los detalles del torneo.
+FI:Muokkaa turnauksen tietoja.
+RU:Редактировать детали турнира.
+
+tt:Save the tournament on your PC.
+NL:Sla het toernooi op.
+DE:Speichern Sie das Turnier.
+FR:Enregistrez le tournoi.
+ES:Guarda el torneo.
+FI:Tallenna turnaus.
+RU:Сохранить турнир.
+
+tt:Later on, you can import it again with %s
+NL:Later kunt u het opnieuw importeren met %s
+DE:Später können Sie es mit %s erneut importieren
+FR:Plus tard, vous pouvez l'importer à nouveau avec %s
+ES:Más tarde, puede importarlo nuevamente con %s
+FI:Myöhemmin voit tuoda sen uudelleen %s-sovelluksella
+RU:Позже вы можете импортировать его снова с помощью %s
+
+tt:Overview of various schedules such as players, tennis courts and times.
+NL:Overzicht van diverse schema's zoals spelers, tennisbanen en tijden.
+DE:Übersicht über verschiedene Zeitpläne wie Spieler, Tennisplätze und Zeiten.
+FR:Aperçu des différents horaires tels que les joueurs, les courts de tennis et les horaires.
+ES:Resumen de varios horarios, como jugadores, canchas de tenis y horarios.
+FI:Katsaus eri aikatauluihin, kuten pelaajat, tenniskentät ja ajat.
+RU:Обзор различных графиков, таких как игроки, теннисные корты и время.
+
+tt:You can have the schedules improved and printed.
+NL:U kunt de schema's laten verbeteren en printen.
+DE:Sie können die Zeitpläne verbesseren und ausdrucken lassen.
+FR:Vous pouvez faire améliorer et imprimer les horaires.
+ES:Puede tener los horarios mejorados e impresos.
+FI:Aikatauluja voi parantaa ja tulostaa.
+RU:Вы можете улучшить графики и распечатать их.
+
+tt:Before printing, the program advises you to use Landscape or Portrait setting for your printer.
+NL:Voordat u afdrukt, raadt het programma u aan de instelling Liggend (Landscape) of Staand (Portrait) voor uw printer te gebruiken.
+DE:Vor dem Drucken empfiehlt das Programm, die Einstellung Querformat oder Hochformat für Ihren Drucker zu verwenden.
+FR:Avant l'impression, le programme vous conseille d'utiliser le paramètre Paysage ou Portrait pour votre imprimante.
+ES:Antes de imprimir, el programa le recomienda utilizar la configuración horizontal o vertical para su impresora.
+FI:Ennen tulostamista ohjelma kehottaa sinua käyttämään tulostimelle Maisema- tai Pysty-asetusta.
+RU:Перед печатью программа рекомендует использовать для вашего принтера настройку «Пейзаж» или «Портрет».
+
+tt:Enter the results of the tournament.
+NL:Vul de uitslagen van het toernooi in.
+DE:Tragen Sie die Ergebnisse des Turniers ein.
+FR:Entrez les résultats du tournoi.
+ES:Ingrese los resultados del torneo.
+FI:Anna turnauksen tulokset.
+RU:Введите результаты турнира.
+
+tt:You can print the results.
+NL:U kunt de uitslagen printen.
+DE:Sie können die Ergebnisse ausdrucken.
+FR:Vous pouvez imprimer les résultats.
+ES:Puedes imprimir los resultados.
+FI:Voit tulostaa tulokset.
+RU:Вы можете распечатать результаты.
+
+tt:Shows this text.
+NL:Toont deze tekst.
+DE:Zeigt diesen Text.
+FR:Affiche ce texte.
+ES:Muestra este texto
+FI:Näyttää tämän tekstin.
+RU:Показывает этот текст.
+
+tt:Donate something if you are happy with this program.
+NL:Doneer iets als u blij bent met dit programma.
+DE:Spenden Sie etwas, wenn Sie mit diesem Programm zufrieden sind.
+FR:Faites un don si vous êtes satisfait de ce programme.
+ES:Done algo si está satisfecho con este programa.
+FI:Lahjoita jotain, jos olet tyytyväinen tähän ohjelmaan.
+RU:Пожертвуйте что-нибудь, если вы довольны этой программой.
+
+tt:Select the desired language.
+NL:Kies de gewenste taal.
+DE:Wählen Sie die gewünschte Sprache.
+FR:Sélectionnez la langue désirée.
+ES:Selecciona el idioma deseado.
+FI:Valitse haluamasi kieli.
+RU:Выберите нужный язык.
+
+tt:The following buttons are not activated everywhere:
+NL:De volgende knoppen zijn niet overal geactiveerd:
+DE:Die folgenden Schaltflächen sind nicht überall aktiviert:
+FR:Les boutons suivants ne sont pas activés partout:
+ES:Los siguientes botones no están activados en todas partes:
+FI:Seuraavia painikkeita ei aktivoida kaikkialla:
+RU:Следующие кнопки активируются не везде:
+
+tt:Look at the result to be printed.
+NL:Bekijk het te printen resultaat.
+DE:Sehen Sie sich das zu druckende Ergebnis an.
+FR:Regardez le résultat à imprimer.
+ES:Mira el resultado a imprimir.
+FI:Katso tulostettava tulos.
+RU:Посмотрите на результат для печати.
+
+tt:Print the data. Specify printer settings (Landscape, Portrait, double-sided, etc.).
+NL:Druk de gegevens af. Geef de printerinstellingen op (Liggend/Landscape, Staand/Portrait, dubbelzijdig, etc.).
+DE:Drucken Sie die Daten. Geben Sie die Druckereinstellungen an (Querformat, Hochformat, beidseitig usw.).
+FR:Imprimez les données. Spécifiez les paramètres de l'imprimante (paysage, portrait, recto verso, etc.).
+ES:Imprime los datos. Especifique la configuración de la impresora (horizontal, vertical, doble cara, etc.).
+FI:Tulosta tiedot. Määritä tulostimen asetukset (vaaka, muotokuva, kaksipuolinen jne.).
+RU:Распечатайте данные. Укажите настройки принтера (альбомная, книжная, двусторонняя и т. Д.).
+
+tt:Undo an action or redo an undone action.
+NL:Een actie ongedaan maken of een ongedaan gemaakte actie opnieuw uitvoeren.
+DE:Eine Aktion rückgängig machen oder eine rückgängig gemachte Aktion wiederholen.
+FR:Annuler une action ou refaire une action annulée.
+ES:Deshacer una acción o rehacer una acción deshecha.
+FI:Kumoa toiminto tai tee uudelleen peruutettu toiminto.
+RU:Отменить действие или повторить отмененное действие.
+
+tt:Improve the schedules, taking into account the weight factors.
+NL:Verbeter de schema's. Er wordt rekening gehouden met de gewichtsfactoren.
+DE:Verbesseren Sie die Zeitpläne unter Berücksichtigung der Gewichtsfaktoren.
+FR:Améliorez les horaires en tenant compte des facteurs de poids.
+ES:Mejore los horarios, teniendo en cuenta los factores de peso.
+FI:Paranna aikatauluja ottaen huomioon painokertoimet.
+RU:Улучшить графики, учитывая весовые коэффициенты.
+
+tt:What does this program do?
+NL:Wat doet dit programma?
+DE:Was macht dieses Programm?
+FR:Que fait ce programme?
+ES:¿Qué hace este programa?
+FI:Mitä tämä ohjelma tekee?
+RU:Что делает эта программа?
+
+tt:The program calculates a tennis tournament based on the following data:
+NL:Het programma berekent een tennistoernooi op grond van de volgende gegevens:
+DE:Das Programm berechnet ein Tennisturnier anhand folgender Daten:
+FR:Le programme calcule un tournoi de tennis sur la base des données suivantes:
+ES:El programa calcula un torneo de tenis basado en los siguientes datos:
+FI:Ohjelma laskee tennisturnauksen seuraavien tietojen perusteella:
+RU:Программа рассчитывает теннисный турнир на основе следующих данных:
+
+tt:Double or single game
+NL:Double of single spel
+DE:Doppel- oder Einzelspiel
+FR:Jeu double ou simple
+ES:Juego doble o simple
+FI:Tupla-tai yhden pelin
+RU:Двойная или одиночная игра
+
+tt:The number of players
+NL:Het aantal spelers
+DE:Die Anzahl der Spieler
+FR:Le nombre de joueurs
+ES:La cantidad de jugadores
+FI:Pelaajien lukumäärä
+RU:Количество игроков
+
+tt:The gender of the players
+NL:Het geslacht van de spelers
+DE:Das Geschlecht der Spieler
+FR:Le sexe des joueurs
+ES:El género de los jugadores.
+FI:Pelaajien sukupuoli
+RU:Пол игроков
+
+tt:The strength of the players
+NL:De sterkte van de spelers
+DE:Die Stärke der Spieler
+FR:La force des joueurs
+ES:La fuerza de los jugadores.
+FI:Pelaajien vahvuus
+RU:Сила игроков
+
+tt:The number of available tennis courts
+NL:Het aantal beschikbare tennisbanen
+DE:Die Anzahl der verfügbaren Tennisplätze
+FR:Le nombre de courts de tennis disponibles
+ES:El número de canchas de tenis disponibles.
+FI:Käytettävissä olevien tenniskenttien määrä
+RU:Количество доступных теннисных кортов
+
+tt:The number of games that each player plays
+NL:Het aantal games dat elke speler speelt
+DE:Die Anzahl der Spiele, die jeder Spieler spielt
+FR:Le nombre de parties jouées par chaque joueur
+ES:La cantidad de juegos que juega cada jugador
+FI:Pelien lukumäärä, jota kukin pelaaja pelaa
+RU:Количество игр, в которые играет каждый игрок
+
+tt:What is meant by: tournament?
+NL:Wat wordt bedoeld met: toernooi?
+DE:Was ist gemeint mit: Turnier?
+FR:Qu'entend-on par: tournoi?
+ES:¿Qué se entiende por: torneo?
+FI:Mitä tarkoitetaan: turnauksella?
+RU:Что подразумевается под: турнир?
+
+tt:In the tournament a number of players (for example 24) each play a number of games (for example 4).
+NL:In het toernooi spelen een aantal spelers (bijvoorbeeld 24) elk een aantal games (bijvoorbeeld 4).
+DE:In dem Turnier spielen eine Anzahl von Spielern (zum Beispiel 24) jeweils eine Anzahl von Spielen (zum Beispiel 4).
+FR:Dans le tournoi, un certain nombre de joueurs (par exemple 24) jouent chacun un certain nombre de jeux (par exemple 4).
+ES:En el torneo, varios jugadores (por ejemplo, 24) juegan cada uno una cantidad de juegos (por ejemplo, 4).
+FI:Turnauksessa useita pelaajia (esimerkiksi 24) jokainen pelaa useita pelejä (esimerkiksi 4).
+RU:В турнире несколько игроков (например, 24) играют в несколько игр (например, 4).
+
+tt:There are no fixed teams: the players are always combined in a different combination, the program tries to form optimum combinations.
+NL:Er zijn geen vaste teams: de spelers worden steeds in een andere combinatie gecombineerd, het programma probeert optimale combinaties te vormen.
+DE:Es gibt keine festen Teams: Die Spieler werden immer in einer anderen Kombination kombiniert, das Programm versucht, optimale Kombinationen zu bilden.
+FR:Il n'y a pas d'équipes fixes: les joueurs sont toujours combinés dans une combinaison différente, le programme essaie de former des combinaisons optimales.
+ES:No hay equipos fijos: los jugadores siempre se combinan en una combinación diferente, el programa intenta formar combinaciones óptimas.
+FI:Kiinteitä joukkueita ei ole: pelaajat yhdistetään aina erilaisessa yhdistelmässä, ohjelma yrittää muodostaa optimaaliset yhdistelmät.
+RU:Нет фиксированных команд: игроки всегда объединяются в разные комбинации, программа старается сформировать оптимальные комбинации.
+
+tt:It is up to the organization of the tournament to determine who the final winners are.
+EN:It is up to the organization of the tournament to determine the final winners.
+NL:Het is aan de organisatie van het toernooi te bepalen wie de uiteindelijke winnaars zijn.
+DE:Es liegt an der Organisation des Turniers zu bestimmen, wer die endgültigen Gewinner sind.
+FR:C'est à l'organisation du tournoi de déterminer qui sont les gagnants finaux.
+ES:Depende de la organización del torneo determinar quiénes son los ganadores finales.
+FI:Turnauksen järjestäminen päättää, kuka lopulliset voittajat ovat.
+RU:Организация турнира определяется тем, кто является финальным победителем.
+
+tt:The program tries to put together a tournament
+NL:Het programma probeert een toernooi samen te stellen
+DE:Das Programm versucht, ein Turnier zusammenzustellen
+FR:Le programme essaie de monter un tournoi
+ES:El programa intenta organizar un torneo
+FI:Ohjelma yrittää koota turnauksen
+RU:Программа пытается собрать турнир
+
+tt:Each player plays the desired number of games.
+NL:Elke speler speelt het gewenste aantal games.
+DE:Jeder Spieler spielt die gewünschte Anzahl an Spielen.
+FR:Chaque joueur joue le nombre de jeux souhaité.
+ES:Cada jugador juega el número deseado de juegos.
+FI:Jokainen pelaaja pelaa haluamasi määrän pelejä.
+RU:Каждый игрок играет желаемое количество игр.
+
+tt:The available tennis courts are taken into account.
+NL:Er wordt rekening wordt gehouden met de beschikbare tennisbanen.
+DE:Die verfügbaren Tennisplätze werden berücksichtigt.
+FR:Les courts de tennis disponibles sont pris en compte.
+ES:Se tienen en cuenta las canchas de tenis disponibles.
+FI:Käytettävissä olevat tenniskentät otetaan huomioon.
+RU:Доступные теннисные корты принимаются во внимание.
+
+tt:In every game there is an as equal as possible male-female ratio.
+NL:In elke game is een zo gelijk mogelijke man-vrouw verhouding.
+DE:In jedem Spiel gibt es ein gleiches Verhältnis zwischen Männern und Frauen.
+FR:Dans chaque match, il y a un rapport hommes-femmes aussi égal que possible.
+ES:En cada juego hay una relación hombre-mujer lo más igual posible.
+FI:Jokaisessa pelissä on mahdollisimman tasa-arvoinen miesten ja naisten suhde.
+RU:В каждой игре соотношение мужчин и женщин максимально равно.
+
+tt:As much as possible, players are prevented from meeting each other more than once.
+NL:Er wordt zoveel mogelijk voorkomen dat spelers elkaar meer dan eenmaal ontmoeten.
+DE:Die Spieler dürfen sich so oft wie möglich nicht mehr als einmal treffen.
+FR:Autant que possible, les joueurs ne peuvent pas se rencontrer plus d'une fois.
+ES:En la medida de lo posible, se impide que los jugadores se reúnan más de una vez.
+FI:Mahdollisuuksien mukaan pelaajia estetään tapaamasta toisiaan useammin kuin kerran.
+RU:Насколько это возможно, игрокам запрещено встречаться друг с другом более одного раза.
+
+tt:The program tries to find an optimal tournament.
+NL:Het programma probeert een optimaal toernooi te vinden.
+DE:Das Programm versucht, ein optimales Turnier zu finden.
+FR:Le programme essaie de trouver un tournoi optimal.
+ES:El programa intenta encontrar un torneo óptimo.
+FI:Ohjelma yrittää löytää optimaalisen turnauksen.
+RU:Программа пытается найти оптимальный турнир.
+
+tt:If you are not satisfied (for example because players meet each other too often),
+NL:Als u niet tevreden bent (bijvoorbeeld omdat spelers elkaar te vaak ontmoeten),
+DE:Wenn Sie nicht zufrieden sind (zum Beispiel weil sich die Spieler zu oft treffen),
+FR:Si vous n'êtes pas satisfait (par exemple parce que les joueurs se rencontrent trop souvent),
+ES:Si no está satisfecho (por ejemplo, porque los jugadores se encuentran con demasiada frecuencia),
+FI:Jos et ole tyytyväinen (esimerkiksi koska pelaajat tapaavat toisiaan liian usein),
+RU:Если вы не удовлетворены (например, потому что игроки встречаются друг с другом слишком часто),
+
+tt:you can find a better alternative (if possible) by clicking on %s.
+NL:kunt u een beter alternatief vinden (indien mogelijk) door op %s te klikken.
+DE:können Sie eine bessere Alternative finden (wenn möglich), indem Sie auf %s klicken.
+FR:vous pouvez trouver une meilleure alternative (si possible) en cliquant sur %s.
+ES:puede encontrar una mejor alternativa (si es posible) haciendo clic en %s.
+FI:voit löytää paremman vaihtoehdon (jos mahdollista) napsauttamalla %s.
+RU:вы можете найти лучшую альтернативу (если это возможно), нажав %s.
+
+tt:What information can you enter?
+NL:Welke gegevens kunt u invoeren?
+DE:Welche Informationen können Sie eingeben?
+FR:Quelles informations pouvez-vous saisir?
+ES:¿Qué información puedes ingresar?
+FI:Mitä tietoja voit syöttää?
+RU:Какую информацию вы можете ввести?
+
+tt:Type of game: double or single
+NL:Soort spel: double of single
+DE:Art des Spiels: Doppel oder Einzel
+FR:Type de jeu: double ou simple
+ES:Tipo de juego: doble o sencillo
+FI:Pelityyppi: kaksinkertainen tai yhden
+RU:Тип игры: двойная или одиночная
+
+tt:The players: first name, last name, gender (
+NL:De spelers: voornaam, achternaam, geslacht (
+DE:Die Spieler: Vorname, Nachname, Geschlecht (
+FR:Les joueurs: prénom, nom, sexe (
+ES:Los jugadores: nombre, apellido, género (
+FI:Pelaajat: etunimi, sukunimi, sukupuoli (
+RU:Игроки: имя, фамилия, пол (
+
+tt:strength (1 = weak, 2 = average, 3 = strong)
+NL:sterkte (1 = zwak, 2 = gemiddeld, 3 = sterk)
+DE:Stärke (1 = schwach, 2 = durchschnittlich, 3 = stark)
+FR:force (1 = faible, 2 = moyen, 3 = fort)
+ES:fuerza (1 = débil, 2 = promedio, 3 = fuerte)
+FI:lujuus (1 = heikko, 2 = keskimääräinen, 3 = vahva)
+RU:сила (1 = слабая, 2 = средняя, 3 = сильная)
+
+tt:The names of the tennis courts (for example: Center court, court 2, court 3)
+NL:De namen van de tennisbanen (bijvoorbeeld: Centre court, baan 2, baan 3)
+DE:Die Namen der Tennisplätze (zum Beispiel: Center Court, Court 2, Court 3)
+FR:Les noms des courts de tennis (par exemple: Court central, court 2, court 3)
+ES:Los nombres de las canchas de tenis (por ejemplo: cancha central, cancha 2, cancha 3)
+FI:Tenniskenttien nimet (esimerkiksi: keskuskenttä, tuomioistuin 2, tuomioistuin 3)
+RU:Названия теннисных кортов (например: центральный корт, корт 2, корт 3)
+
+tt:The playing times (free entry: there is no relation to the operation of the program) with the available tennis courts
+NL:De speeltijden (vrije invoer: er is geen relatie met de werking van het programma) met daarbij de beschikbare tennisbanen
+DE:Die Spielzeiten (freier Eintritt: es besteht kein Bezug zum Ablauf des Programms) und den verfügbaren Tennisplätzen
+FR:Les horaires de jeu (entrée gratuite: il n'y a aucun rapport avec le fonctionnement du programme) avec les courts de tennis disponibles
+ES:Los tiempos de juego (entrada gratuita: no hay relación con el funcionamiento del programa) con las canchas de tenis disponibles.
+FI:Peliajat (vapaa pääsy: ei ole yhteyttä ohjelman toimintaan) käytettävissä oleviin tenniskenttiin
+RU:Время игры (бесплатный вход: нет никакого отношения к работе программы) с доступными теннисными кортами
+
+tt:The importance of the following criteria:
+NL:Het belang van de volgende criteria:
+DE:Die Wichtigkeit der folgenden Kriterien:
+FR:L'importance des critères suivants:
+ES:La importancia de los siguientes criterios:
+FI:Seuraavien kriteerien merkitys:
+RU:Важность следующих критериев:
+
+tt:Meet each other more than once
+NL:Elkaar meer dan eenmaal ontmoeten
+DE:Treffen Sie sich mehr als einmal
+FR:Se rencontrer plus d'une fois
+ES:Nos vemos más de una vez
+FI:Tavata toisiaan useammin kuin kerran
+RU:Встречаемся не раз
+
+tt:Mix of men and women
+NL:Mix van mannen en vrouwen
+DE:Mix aus Männern und Frauen
+FR:Mélange d'hommes et de femmes
+ES:Mezcla de hombres y mujeres
+FI:Yhdistelmä miehiä ja naisia
+RU:Сочетание мужчин и женщин
+
+tt:Equal distribution of strength per game
+NL:Gelijke verdeling van sterkte per game
+DE:Gleiche Verteilung der Stärke pro Spiel
+FR:Répartition égale de la force par partie
+ES:Distribución equitativa de la fuerza por juego
+FI:Voiman jakautuminen tasaisesti peliä kohden
+RU:Равное распределение силы за игру
+
+tt:For each criterion you indicate:
+NL:Voor elke criterium geeft u aan:
+DE:Für jedes Kriterium geben Sie an:
+FR:Pour chaque critère, vous indiquez:
+ES:Para cada criterio usted indica:
+FI:Jokaista ilmoittamaasi kriteeriä varten:
+RU:Для каждого критерия вы указываете:
+
+tt:or
+NL:of
+DE:oder
+FR:ou
+ES:o
+FI:tai
+RU:или
+
+tt:When you click on the button below, the standard download feature from your browser
+NL:Wanneer u op de onderstaande knop klikt, wordt de standaard downloadfunctie van uw browser
+DE:Wenn Sie auf die Schaltfläche unten klicken, wird die Standard-Download-Funktion Ihres Browsers
+FR:Lorsque vous cliquez sur le bouton ci-dessous, la fonction de téléchargement standard de votre navigateur
+ES:Cuando hace clic en el botón a continuación, la función de descarga estándar desde su navegador
+FI:Kun napsautat alla olevaa painiketta, tavallinen latausominaisuus selaimesta
+RU:Когда вы нажимаете на кнопку ниже, стандартная функция загрузки из вашего браузера
+
+tt:(Windows Explorer, Firefox, Chromium, Safari, ...) will be activated.
+NL:(Windows Explorer, Firefox, Chromium, Safari, ...) geactiveerd.
+DE:(Windows Explorer, Firefox, Chromium, Safari, ...) aktiviert.
+FR:(Windows Explorer, Firefox, Chromium, Safari, ...) sera activé.
+ES:(Windows Explorer, Firefox, Chromium, Safari, ...) se activará.
+FI:(Windows Explorer, Firefox, Chromium, Safari, ...) aktivoidaan.
+RU:(Проводник Windows, Firefox, Chromium, Safari, ...) будут активированы.
+
+tt:For most browsers, the tournament will be saved in the folder "Downloads"
+NL:Voor de meeste browsers wordt het toernooi opgeslagen in de map "Downloads"
+DE:Bei den meisten Browsern wird das Turnier im Ordner "Downloads" gespeichert
+FR:Pour la plupart des navigateurs, le tournoi sera enregistré dans le dossier "Téléchargements"
+ES:Para la mayoría de los navegadores, el torneo se guardará en la carpeta "Descargas"
+FI:Useimpien selainten tapauksessa turnaus tallennetaan "Lataukset" -kansioon.
+RU:Для большинства браузеров турнир будет сохранен в папке «Загрузки»
+
+tt:with the name:
+NL:onder de naam:
+DE:unter dem Namen:
+FR:avec le nom:
+ES:con el nombre:
+FI:nimellä:
+RU:с именем:
+
+tt:You can import this tournament again via:
+NL:U kunt dit toernooi weer importeren via:
+DE:Sie können Sie dieses Turnier importieren über:
+FR:Vous pouvez réimporter ce tournoi via:
+ES:Puedes importar este torneo nuevamente a través de:
+FI:Voit tuoda tämän turnauksen uudelleen:
+RU:Вы можете импортировать этот турнир снова через:
+
+tt:Copyright 2019, 2020 Willem Vermin
+NL:Copyright 2019, 2020 Willem Vermin
+DE:Copyright 2019, 2020 Willem Vermin 
+FR:Copyright 2019, 2020 Willem Vermin
+ES:Copyright 2019, 2020 Willem Vermin
+FI:Tekijänoikeudet 2019, 2020 Willem Vermin
+RU:Copyright 2019, 2020 Willem Vermin
+
+tt:This software may be distributed, copied, changed and used by anyone.
+NL:Deze programmatuur mag worden gedistribueerd, gekopieerd, veranderd en door iedereen worden gebruikt.
+DE:Diese Software darf von jedermann verbreitet, kopiert, geändert und verwendet werden.
+FR:Ce logiciel peut être distribué, copié, modifié et utilisé par n'importe qui.
+ES:Este software puede ser distribuido, copiado, cambiado y utilizado por cualquier persona.
+FI:Kuka tahansa voi levittää, kopioida, muuttaa ja käyttää tätä ohjelmistoa.
+RU:Это программное обеспечение может распространяться, копироваться, изменяться и использоваться кем-либо.
+
+tt:It is forbidden to use this software commercially, directly or indirectly.
+NL:Het is verboden deze programmatuur commercieel aan te wenden, direct noch indirect.
+DE:Es ist untersagt, diese Software direkt oder indirekt kommerziell zu nutzen.
+FR:Il est interdit d'utiliser ce logiciel à des fins commerciales, directes ou indirectes.
+ES:Está prohibido utilizar este software comercialmente, directa o indirectamente.
+FI:Tämän ohjelmiston käyttö on kielletty kaupallisesti, suoraan tai epäsuorasti.
+RU:Запрещено использовать это программное обеспечение в коммерческих, прямых или косвенных целях.
+
+tt:Disclaimer
+NL:Disclaimer
+DE:Haftungsausschluss
+FR:Clause de non-responsabilité
+ES:Descargo de responsabilidad
+FI:Vastuuvapauslauseke
+RU:Отказ
+
+tt:The author of this software does not accept any liability for damage, direct or indirect, as a result of the use of this software.
+NL:De auteur van deze programmatuur aanvaardt geen enkele aansprakelijkheid voor schade, direct of indirect, als gevolg van het gebruik van deze programmatuur.
+DE:Der Autor dieses Software übernimmt keine Haftung für direkten oder indirekten Schaden infolge der Verwendung dieser Software.
+FR:L'auteur de ce logiciel décline toute responsabilité pour les dommages, directs ou indirects, résultant de l'utilisation de ce logiciel.
+ES:El autor de este software no acepta ninguna responsabilidad por daños, directos o indirectos, como resultado del uso de este software.
+FI:Tämän ohjelmiston kirjoittaja ei vastaa mistään vastuusta vahingoista, välittömistä tai epäsuorista, jotka johtuvat tämän ohjelmiston käytöstä.
+RU:Автор этого программного обеспечения не несет никакой ответственности за ущерб, прямой или косвенный, в результате использования этого программного обеспечения.
+
+tt:The use is entirely at your own risk.
+NL:Het gebruik is volledig voor eigen risico.
+DE:Die Nutzung erfolgt auf eigenes Risiko.
+FR:L'utilisation est entièrement à vos risques et périls.
+ES:El uso es bajo su propio riesgo.
+FI:Käyttö on täysin omalla vastuulla.
+RU:Использование полностью на свой страх и риск.
+
+tt:Donations are welcome
+NL:Donaties zijn welkom
+DE:Spenden sind willkommen
+FR:Les dons sont les bienvenus
+ES:Donaciones son bienvenidas
+FI:Lahjoitukset ovat tervetulleita
+RU:Пожертвования приветствуются
+
+tt:We would appreciate it if you would like to make a small donation (from 2 EURO).
+NL:Wij zouden het op prijs stellen als U een kleine donatie (vanaf 2 EURO) zou willen doen.
+DE:Wir freuen uns über eine kleine Spende (ab 2 EURO).
+FR:Nous vous serions reconnaissants de bien vouloir faire un petit don (à partir de 2 EURO).
+ES:Le agradeceríamos si desea hacer una pequeña donación (de 2 euros).
+FI:Olisimme kiitollisia, jos haluaisit tehdä pienen lahjoituksen (2 eurosta).
+RU:Мы будем признательны, если вы захотите сделать небольшое пожертвование (от 2 евро).
+
+tt:Follow the link below to my PayPal page:
+NL:Onderstaande link voert u naar mijn PayPal pagina:
+DE:Folgen Sie dem Link unten zu meiner PayPal-Seite:
+FR:Suivez le lien ci-dessous vers ma page PayPal:
+ES:Siga el enlace de abajo a mi página de PayPal:
+FI:Seuraa alla olevaa linkkiä PayPal-sivulle:
+RU:Перейдите по ссылке ниже на мою страницу PayPal:
+
+tt:Shows some in-depth information about the program
+EN:Shows in-depth information about the program
+NL:Toont diepgaande informatie over het programma
+DE:Zeigt detaillierte Informationen zum Programm an
+FR:Affiche des informations détaillées sur le programme
+ES:Muestra información detallada sobre el programa
+FI:Näyttää yksityiskohtaisia tietoja ohjelmasta
+RU:Показывает подробную информацию о программе
+
+tt:alracTTG version
+NL:alracTTG versie
+DE:alracTTG version
+FR:version alracTTG
+ES:versión alracTTG
+FI:alracTTG-versio
+RU:версия alracTTG
+
+tt:Background information about alracTTG
+NL:Achtergrond informatie over alracTTG
+DE:Informations de base sur alracTTG
+FR:Informations de base sur alracTTG
+ES:Información básica sobre alracTTG
+FI:Taustatietoja alracTTG: stä
+RU:Справочная информация о alracTTG
+
+tt:On this page you will find information about alracTTG: how does it actually work, how is it implemented, etc.
+NL:Op deze pagina vindt u informatie over alracTTG: hoe werkt het eigenlijk, hoe is het geïmplementeerd etc.
+DE:Auf dieser Seite finden Sie Informationen zu alracTTG: Wie funktioniert es eigentlich, wie wird es implementiert usw.
+FR:Sur cette page, vous trouverez des informations sur alracTTG: comment fonctionne-t-il réellement, comment est-il implémenté, etc.
+ES:En esta página encontrará información sobre alracTTG: cómo funciona realmente, cómo se implementa, etc.
+FI:Tältä sivulta löydät tietoa alracTTG: stä: kuinka se todella toimii, miten se toteutetaan jne.
+RU:На этой странице вы найдете информацию о alracTTG: как она на самом деле работает, как она реализована и т. Д.
+
+tt:ALRAC'S TENNIS TOURNAMENT GENERATOR is a program designed to solve a typical amateur tennis club problem: design a playing schedule for a tournament in which each player plays a number of times, with as many different players and opponents as possible.
+NL:ALRAC'S TENNIS TOURNAMENT GENERATOR is een programma dat is ontworpen om een typisch amateur tennisclub probleem op te lossen: ontwerp een speelschema voor een toernooi waarin elke speler een aantal malen speelt, met zoveel mogelijk verschillende medespelers en tegenstanders.
+DE:ALRAC'S TENNISTURNIERGENERATOR ist ein Programm zur Lösung eines typischen Problems eines Amateur-Tennisclubs: Entwickeln Sie einen Spielplan für ein Turnier, bei dem jeder Spieler mehrmals mit so vielen verschiedenen Spielern und Gegnern wie möglich spielt.
+FR:ALRAC'S TENNIS TOURNAMENT GENERATOR est un programme conçu pour résoudre un problème typique de club de tennis amateur: concevoir un calendrier de jeu pour un tournoi dans lequel chaque joueur joue un certain nombre de fois, avec autant de joueurs et d'adversaires différents que possible.
+ES:EL GENERADOR DE TORNEOS DE TENIS DE ALRAC es un programa diseñado para resolver un problema típico de un club de tenis amateur: diseñe un horario de juego para un torneo en el que cada jugador juegue varias veces, con tantos jugadores y oponentes diferentes como sea posible.
+FI:ALRACin TENNIS-TURNAMENTTIgeneraattori on ohjelma, joka on suunniteltu ratkaisemaan tyypillinen amatööri tenniskerho -ongelma: Suunnittele peliaikataulu turnaukselle, jossa jokainen pelaaja pelaa useita kertoja, mahdollisimman monen eri pelaajan ja vastustajan kanssa.
+RU:ALRAC TENNIS TOURNAMENT GENERATOR - это программа, предназначенная для решения типичной задачи любительского теннисного клуба: составить расписание игр для турнира, в котором каждый игрок играет несколько раз, с как можно большим количеством разных игроков и противников.
+
+tt:In addition, it is desirable that the strength of the players and the gender are taken into account, so that the tournament is as fair as possible.
+NL:Daarnaast is het wenselijk dat er rekening wordt gehouden met de sterkte van de spelers en het geslacht, zodat een zo eerlijk mogelijk toernooi ontstaat.
+DE:Außerdem ist es wünschenswert, dass die Stärke der Spieler und das Geschlecht berücksichtigt werden, damit das Turnier so fair wie möglich ist.
+FR:De plus, il est souhaitable que la force des joueurs et le sexe soient pris en compte, afin que le tournoi soit le plus équitable possible.
+ES:Además, es deseable que se tenga en cuenta la fuerza de los jugadores y el género, para que el torneo sea lo más justo posible.
+FI:Lisäksi on toivottavaa, että pelaajien vahvuus ja sukupuoli otetaan huomioon, jotta turnaus olisi mahdollisimman oikeudenmukainen.
+RU:Кроме того, желательно, чтобы учитывались сила игроков и пол, чтобы турнир был максимально честным.
+
+tt:The name alracTTG
+NL:De naam alracTTG
+DE:Der Name alracTTG
+FR:Le nom alracTTG
+ES:El nombre alracTTG
+FI:Nimi alracTTG
+RU:Название alracTTG
+
+tt:The name is an abbreviation for alrac's Tennis Tournament Generator.
+NL:De naam is een afkorting van alrac's Tennis Tournement Generator.
+DE:Der Name ist eine Abkürzung für alrac's Tennis Tournament Generator.
+FR:Le nom est l'abréviation du générateur de tournois de tennis d'alrac.
+ES:El nombre es una abreviatura de Alrac's Tennis Tournament Generator.
+FI:Nimi on lyhenne alracin Tennis-turnausgeneraattorista.
+RU:Название является аббревиатурой от Alrac's Tennis Tournament Generator.
+
+tt:ALRAC stands for alracSP, a company that deals with scientific software:
+NL:ALRAC staat voor alracSP, een bedrijf dat zich bezig houdt met wetenschappelijke programmatuur:
+DE:ALRAC steht für alracSP, ein Unternehmen, das sich mit wissenschaftlicher Software befasst:
+FR:ALRAC signifie alracSP, une entreprise spécialisée dans les logiciels scientifiques:
+ES:ALRAC significa alracSP, una compañía que se ocupa de software científico:
+FI:ALRAC tarkoittaa alracSP: tä, yritystä, joka käsittelee tieteellisiä ohjelmistoja:
+RU:ALRAC означает alracSP, компанию, которая занимается научным программным обеспечением:
+
+tt:How does the program work?
+NL:Hoe werkt het programma?
+DE:Wie funktioniert das Programm?
+FR:Comment fonctionne le programme?
+ES:Cómo funciona el programa?
+FI:Kuinka ohjelma toimii?
+RU:Как работает программа?
+
+tt:The program tries to find an optimal solution with a 'genetic algorithm'.
+NL:Het programma probeert een optimale oplossing te vinden met een 'genetisch algoritme'.
+DE:Das Programm versucht mit einem "genetischen Algorithmus" eine optimale Lösung zu finden.
+FR:Le programme essaie de trouver une solution optimale avec un «algorithme génétique».
+ES:El programa intenta encontrar una solución óptima con un 'algoritmo genético'.
+FI:Ohjelma yrittää löytää optimaalisen ratkaisun 'geneettisellä algoritmilla'.
+RU:Программа пытается найти оптимальное решение с помощью «генетического алгоритма».
+
+tt:This goes as follows:
+NL:Dit gaat als volgt:
+DE:Das geht wie folgt:
+FR:Cela se passe comme suit:
+ES:Esto va de la siguiente manera:
+FI:Tämä tapahtuu seuraavasti:
+RU:Это идет следующим образом:
+
+tt:A number of random, but playable, schemes are set up.
+NL:Er wordt een aantal willekeurige, maar wel speelbare, schema's opgezet.
+DE:Es werden eine Reihe von zufälligen, aber spielbaren Schemata eingerichtet.
+FR:Un certain nombre de schémas aléatoires, mais jouables, sont mis en place.
+ES:Se configuran varios esquemas aleatorios, pero jugables.
+FI:Perustetaan joukko satunnaisia, mutta pelattavia järjestelmiä.
+RU:Несколько случайных, но играбельных схем.
+
+tt:A round in such a schedule consists of a random permutation of the players.
+NL:Een ronde in zo'n schema bestaat uit een willekeurige permutatie van de spelers.
+DE:Eine Runde in einem solchen Zeitplan besteht aus einer zufälligen Permutation der Spieler.
+FR:Un tour dans un tel calendrier consiste en une permutation aléatoire des joueurs.
+ES:Una ronda en dicho horario consiste en una permutación aleatoria de los jugadores.
+FI:Kierros tällaisessa aikataulussa koostuu pelaajien satunnaisesta permutaatiosta.
+RU:Раунд в таком расписании состоит из случайной перестановки игроков.
+
+tt:Penalty points are awarded to each schedule.
+NL:Aan elk schema worden strafpunten toegekend.
+DE:Für jeden Zeitplan werden Strafpunkte vergeben.
+FR:Des points de pénalité sont attribués à chaque horaire.
+ES:Se otorgan puntos de penalización a cada horario.
+FI:Jokaiselle aikataululle annetaan rangaistuspisteitä.
+RU:Штрафные очки начисляются за каждый график.
+
+tt:The following things result in penalty points:
+NL:De volgende zaken leveren strafpunten op:
+DE:Die folgenden Dinge führen zu Strafpunkten:
+FR:Les éléments suivants entraînent des points de pénalité:
+ES:Las siguientes cosas resultan en puntos de penalización:
+FI:Seuraavat asiat johtavat rangaistuspisteisiin:
+RU:Следующие вещи приводят к штрафным очкам:
+
+tt:Encounter the same player more than once
+NL:Dezelfde speler meer dan eenmaal tegenkomen
+DE:Triff mehr als einmal auf denselben Spieler
+FR:Rencontrez le même joueur plus d'une fois
+ES:Encuentra al mismo jugador más de una vez
+FI:Kohta sama pelaaja useammin kuin kerran
+RU:Встречайте одного и того же игрока более одного раза
+
+tt:An uneven distribution of strength on both sides of the net
+NL:Een ongelijke verdeling van sterkte aan beide zijden van het net
+DE:Eine ungleichmäßige Kraftverteilung auf beiden Seiten des Netzes
+FR:Une répartition inégale de la force des deux côtés du filet
+ES:Una distribución desigual de la fuerza en ambos lados de la red
+FI:Epätasainen lujuuden jakautuminen verkon molemmille puolille
+RU:Неравномерное распределение прочности по обе стороны сетки
+
+//tt:An uneven distribution of m/f on both sides of the net
+//NL:Een ongelijke verdeling van m/v aan beide zijden van het net
+//DE:Eine ungleichmäßige Verteilung von m/w auf beiden Seiten des Netzes
+//FR:Une répartition inégale de m/f des deux côtés du filet
+//ES:Una distribución desigual de m/f en ambos lados de la red
+//FI:Epätasainen m/f: n jakauma verkon molemmilla puolilla
+//RU:Неравномерное распределение м/ж по обе стороны сетки
+
+tt:An uneven distribution of m/f on both sides of the net
+EN:An uneven distribution of &#9794; &#9792; on both sides of the net
+NL:Een ongelijke verdeling van &#9794; &#9792; aan beide zijden van het net
+DE:Eine ungleichmäßige Verteilung von &#9794; &#9792; auf beiden Seiten des Netzes
+FR:Une répartition inégale de &#9794; &#9792; des deux côtés du filet
+ES:Una distribución desigual de &#9794; &#9792; en ambos lados de la red
+FI:Epätasainen &#9794; &#9792;: n jakauma verkon molemmilla puolilla
+RU:Неравномерное распределение &#9794; &#9792; по обе стороны сетки
+
+tt:The schedule with the least penalty points is shown to the user of the program.
+NL:Het schema met de minste strafpunten wordt getoond aan de gebruiker van het programma.
+DE:Der Zeitplan mit den geringsten Strafpunkten wird dem Benutzer des Programms angezeigt.
+FR:Le programme avec le moins de points de pénalité est montré à l'utilisateur du programme.
+ES:El horario con la menor penalización se muestra al usuario del programa.
+FI:Aikataulu, jolla on vähiten rangaistuspisteitä, näytetään ohjelman käyttäjälle.
+RU:Расписание с наименьшими штрафными баллами показывается пользователю программы.
+
+tt:This schedule is by no means optimal in practice.
+NL:Dit schema is in de praktijk lang niet optimaal.
+DE:Dieser Zeitplan ist in der Praxis keineswegs optimal.
+FR:Ce calendrier n'est en aucun cas optimal dans la pratique.
+ES:Este horario no es óptimo en la práctica.
+FI:Tämä aikataulu ei missään nimessä ole optimaalinen käytännössä.
+RU:Этот график отнюдь не оптимален на практике.
+
+tt:Now the genetic algorithm is next:
+NL:Nu komt het genetische algoritme aan de beurt:
+DE:Nun folgt der genetische Algorithmus:
+FR:Maintenant, l'algorithme génétique est le suivant:
+ES:Ahora el algoritmo genético es el siguiente:
+FI:Nyt geneettinen algoritmi on seuraava:
+RU:Теперь генетический алгоритм следующий:
+
+tt:Mutations
+NL:Mutaties
+DE:Mutationen
+FR:Mutations
+ES:Mutaciones
+FI:mutaatiot
+RU:Мутации
+
+tt:a round of each schedule is shuffled.
+NL:van elk schema wordt een ronde gehusseld.
+DE:eine Runde jedes Zeitplans wird gemischt.
+FR:un tour de chaque horaire est mélangé.
+ES:se baraja una ronda de cada horario.
+FI:kierros kutakin aikataulua sekoitetaan.
+RU:раунд каждого графика перемешивается.
+
+tt:If the new scheme yields fewer penalty points than the original one, the original scheme is deleted and replaced by the new one.
+NL:Indien het nieuwe schema minder strafpunten oplevert dan het oorspronkelijke, wordt het oorspronkelijk schema verwijderd en vervangen door het nieuwe.
+DE:Wenn das neue Schema weniger Strafpunkte als das ursprüngliche Schema liefert, wird das ursprüngliche Schema gelöscht und durch das neue ersetzt.
+FR:Si le nouveau schéma rapporte moins de points de pénalité que le schéma d'origine, le schéma d'origine est supprimé et remplacé par le nouveau.
+ES:Si el nuevo esquema produce menos puntos de penalización que el original, el esquema original se elimina y se reemplaza por el nuevo.
+FI:Jos uusi järjestelmä tuottaa vähemmän rangaistuspisteitä kuin alkuperäinen, alkuperäinen järjestelmä poistetaan ja korvataan uudella.
+RU:Если новая схема дает меньше штрафных очков, чем исходная, исходная схема удаляется и заменяется новой.
+
+tt:Exchange
+NL:Uitwisseling
+DE:Austausch
+FR:Échange
+ES:Intercambiar
+FI:Vaihto
+RU:Обмен
+
+tt:two schemes are chosen at random: A and B.
+NL:er worden twee schema's willekeurig gekozen: A en B.
+DE:zwei Schemata werden zufällig ausgewählt: A und B.
+FR:deux schémas sont choisis au hasard: A et B.
+ES:se eligen dos esquemas al azar: A y B.
+FI:kaksi järjestelmää valitaan satunnaisesti: A ja B.
+RU:две схемы выбираются случайным образом: A и B.
+
+tt:A new schedule C is compiled from these two schedules: a number of laps of schedule A and a number of laps of schedule B.
+NL:Uit deze twee schema's wordt een nieuw schema C samengesteld: een aantal ronden van schema A en een aantal ronden van schema B.
+DE:Ein neuer Zeitplan C wird aus diesen beiden Zeitplänen zusammengestellt: eine Anzahl von Runden von Zeitplan A und eine Anzahl von Runden von Zeitplan B.
+FR:Un nouvel horaire C est compilé à partir de ces deux horaires: un certain nombre de tours de l'annexe A et un certain nombre de tours de l'annexe B.
+ES:A partir de estos dos cronogramas se compila un nuevo horario C: varias vueltas del horario A y varias vueltas del horario B.
+FI:Näistä kahdesta aikataulusta kootaan uusi aikataulu C: useita aikataulun A kierroksia ja useita aikataulun B kierroksia.
+RU:Новое расписание C составлено из этих двух расписаний: количество кругов расписания A и количество кругов расписания B.
+
+tt:The schedule with the most penalties is removed from schemes A, B and C.
+NL:Van de schema's A, B en C wordt degene met de meeste strafpunten verwijderd.
+DE:Der Zeitplan mit den meisten Strafen wird aus den Schemata A, B und C gestrichen.
+FR:Le calendrier avec le plus de pénalités est supprimé des régimes A, B et C.
+ES:El cronograma con la mayor cantidad de penalizaciones se elimina de los esquemas A, B y C.
+FI:Aikataulu, jolla on eniten rangaistuksia, poistetaan järjestelmistä A, B ja C.
+RU:График с наибольшим количеством штрафов удален из схем A, B и C.
+
+tt:These mutations and exchanges are repeated a number of times, and the best result is presented to the user of the program.
+NL:Deze mutaties en uitwisselingen worden een aantal malen herhaald, en het beste resultaat wordt gepresenteerd aan de gebruiker van het programma.
+DE:Diese Mutationen und Austausche werden mehrmals wiederholt und das beste Ergebnis wird dem Benutzer des Programms präsentiert.
+FR:Ces mutations et échanges se répètent plusieurs fois et le meilleur résultat est présenté à l'utilisateur du programme.
+ES:Estas mutaciones e intercambios se repiten varias veces, y el mejor resultado se presenta al usuario del programa.
+FI:Nämä mutaatiot ja vaihdot toistetaan useita kertoja, ja paras tulos esitetään ohjelman käyttäjälle.
+RU:Эти мутации и обмены повторяются несколько раз, и наилучший результат представляется пользователю программы.
+
+tt:Implementation
+NL:Implementatie
+DE:Implementierung
+FR:La mise en oeuvre
+ES:Implementación
+FI:Toteutus
+RU:Реализация
+
+tt:It has been decided to let the program run in a web browser (Firefox, Internet Explorer, Safari, ...).
+NL:Er is voor gekozen het programma te laten draaien in een web browser (Firefox, Internet Exporer, Safari, …).
+DE:Es wurde beschlossen, das Programm in einem Webbrowser (Firefox, Internet Explorer, Safari, ...) laufen zu lassen.
+FR:Il a été décidé de laisser le programme s'exécuter dans un navigateur Web (Firefox, Internet Explorer, Safari, ...).
+ES:Se ha decidido dejar que el programa se ejecute en un navegador web (Firefox, Internet Explorer, Safari, ...).
+FI:Ohjelman on päätetty antaa suorittaa selaimessa (Firefox, Internet Explorer, Safari, ...).
+RU:Было решено запустить программу в веб-браузере (Firefox, Internet Explorer, Safari, ...).
+
+tt:Benefits:
+NL:Voordelen:
+DE:Leistungen:
+FR:Avantages:
+ES:Beneficios:
+FI:Edut:
+RU:Преимущества:
+
+tt:Web browsers are present on every operating system (Windows, Linux, Apple, ...)
+NL:Webbrowsers zijn aanwezig op elk besturingssysteem (Windows, Linux, Apple,…)
+DE:Webbrowser sind auf jedem Betriebssystem vorhanden (Windows, Linux, Apple, ...)
+FR:Les navigateurs Web sont présents sur tous les systèmes d'exploitation (Windows, Linux, Apple, ...)
+ES:Los navegadores web están presentes en todos los sistemas operativos (Windows, Linux, Apple, ...)
+FI:Verkkoselaimet ovat läsnä kaikissa käyttöjärjestelmissä (Windows, Linux, Apple, ...)
+RU:Веб-браузеры присутствуют в каждой операционной системе (Windows, Linux, Apple, ...)
+
+tt:A web browser itself provides various facilities that are needed for the program: buttons, page layout, printing, and the ability to easily call up the program.
+NL:Een webbrowser levert van zichzelf al verschillende faciliteiten die nodig zijn voor het programma: buttons, pagina opmaak, printen, en de mogelijkheid om het programma eenvoudig op te roepen.
+DE:Ein Webbrowser selbst bietet verschiedene Funktionen, die für das Programm erforderlich sind: Schaltflächen, Seitenlayout, Drucken und die Möglichkeit, das Programm einfach aufzurufen.
+FR:Un navigateur Web lui-même fournit diverses fonctionnalités nécessaires au programme: boutons, mise en page, impression et possibilité d'appeler facilement le programme.
+ES:Un navegador web en sí mismo proporciona varias facilidades que son necesarias para el programa: botones, diseño de página, impresión y la capacidad de abrir fácilmente el programa.
+FI:Itse selain tarjoaa useita ohjelmalle tarvittavia toimintoja: painikkeet, sivun asettelun, tulostamisen ja mahdollisuuden kutsua ohjelma helposti esiin.
+RU:Сам веб-браузер предоставляет различные средства, необходимые для программы: кнопки, макет страницы, печать и возможность простого вызова программы.
+
+tt:A web browser protects the user against rogue software.
+NL:Een webbrowser beschermt de gebruiker tegen malafide programmatuur.
+DE:Ein Webbrowser schützt den Benutzer vor betrügerischer Software.
+FR:Un navigateur Web protège l'utilisateur contre les logiciels malveillants.
+ES:Un navegador web protege al usuario contra software no autorizado.
+FI:Verkkoselain suojaa käyttäjää roistoohjelmilta.
+RU:Веб-браузер защищает пользователя от мошеннических программ.
+
+tt:The programming language was then obvious: Javascript.
+NL:De programmeertaal lag dan voor de hand: Javascript.
+DE:Die Programmiersprache war dann klar: Javascript.
+FR:Le langage de programmation était alors évident: Javascript.
+ES:El lenguaje de programación era entonces obvio: Javascript.
+FI:Ohjelmointikieli oli silloin selvä: Javascript.
+RU:Язык программирования был тогда очевиден: Javascript.
+
+tt:This language is supported by almost all web browsers.
+NL:Deze taal wordt ondersteund door vijwel alle webbrowsers.
+DE:Diese Sprache wird von fast allen Webbrowsern unterstützt.
+FR:Cette langue est prise en charge par presque tous les navigateurs Web.
+ES:Este idioma es compatible con casi todos los navegadores web.
+FI:Tätä kieltä tukevat melkein kaikki selaimet.
+RU:Этот язык поддерживается практически всеми веб-браузерами.
+
+tt:The program manages to find a good schedule within a few seconds.
+NL:Het programma slaagt erin om binnen enkele seconden een goed schema te vinden te vinden.
+DE:Das Programm findet innerhalb weniger Sekunden einen guten Zeitplan.
+FR:Le programme parvient à trouver un bon horaire en quelques secondes.
+ES:El programa logra encontrar un buen horario en pocos segundos.
+FI:Ohjelma onnistuu löytämään hyvän aikataulun muutamassa sekunnissa.
+RU:Программе удается найти хорошее расписание в течение нескольких секунд.
+
+tt:Security
+NL:Beveiliging
+DE:Sicherheit
+FR:Sécurité
+ES:Seguridad
+FI:Turvallisuus
+RU:Безопасность
+
+tt:The program runs on your own system (PC, tablet, etc.), under the care of the web browser.
+NL:Het programma draait op uw eigen systeem (PC, tablet, etc.), onder de hoede van de webbrowser.
+DE:Das Programm läuft auf Ihrem eigenen System (PC, Tablet usw.) unter der Aufsicht des Webbrowsers.
+FR:Le programme s'exécute sur votre propre système (PC, tablette, etc.), sous la garde du navigateur Web.
+ES:El programa se ejecuta en su propio sistema (PC, tableta, etc.), bajo el cuidado del navegador web.
+FI:Ohjelma toimii omalla järjestelmälläsi (tietokone, tabletti jne.), Selaimen ylläpidossa.
+RU:Программа работает на вашей собственной системе (ПК, планшет и т. Д.), Под присмотром веб-браузера.
+
+tt:That means that some important security issues are resolved by themselves:
+NL:Dat betekent dat enkele belangrijke beveiligings-issues vanzelf zijn opgelost:
+DE:Das bedeutet, dass einige wichtige Sicherheitsprobleme von selbst gelöst werden:
+FR:Cela signifie que certains problèmes de sécurité importants sont résolus par eux-mêmes:
+ES:Eso significa que algunos problemas de seguridad importantes se resuelven por sí mismos:
+FI:Tämä tarkoittaa, että eräät tärkeät turvallisuuskysymykset ratkaistaan itse:
+RU:Это означает, что некоторые важные проблемы безопасности решаются сами собой:
+
+tt:for example, it is impossible for the program to view your files, let alone change them.
+NL:het is voor het programma bijvoorbeeld onmogelijk om uw bestanden te bekijken, laat staan te veranderen.
+DE:beispielsweise ist es dem Programm nicht möglich, Ihre Dateien anzuzeigen oder gar zu ändern.
+FR:par exemple, il est impossible pour le programme d'afficher vos fichiers, et encore moins de les modifier.
+ES:por ejemplo, es imposible que el programa vea sus archivos, y mucho menos los cambie.
+FI:esimerkiksi ohjelman on mahdotonta katsella tiedostojasi, puhumattakaan siitä, että muutat niitä.
+RU:например, программа не может просматривать ваши файлы, не говоря уже об их изменении.
+
+tt:All calculations are performed on your system, and all data remains on your system, no data is sent to a server.
+NL:Alle berekeningen worden op uw systeem uitgevoerd, en alle gegevens blijven op uw systeem, er worden geen gegevens naar een server gestuurd.
+DE:Alle Berechnungen werden auf Ihrem System durchgeführt und alle Daten verbleiben auf Ihrem System. Es werden keine Daten an einen Server gesendet.
+FR:Tous les calculs sont effectués sur votre système et toutes les données restent sur votre système, aucune donnée n'est envoyée à un serveur.
+ES:Todos los cálculos se realizan en su sistema, y todos los datos permanecen en su sistema, no se envían datos a un servidor.
+FI:Kaikki laskelmat suoritetaan järjestelmässäsi, ja kaikki tiedot pysyvät järjestelmässäsi, tietoja ei lähetetä palvelimelle.
+RU:Все вычисления выполняются в вашей системе, и все данные остаются в вашей системе, данные не отправляются на сервер.
+
+tt:Advanced
+NL:Geavanceerd
+DE:Kompliziert
+FR:Avancé
+ES:Avanzado
+FI:Pitkälle kehittynyt
+RU:Продвинутый
+
+tt:Import and export of csv files
+NL:Import en export van csv bestanden
+DE:Import und Export von CSV-Dateien
+FR:Importation et exportation de fichiers csv
+ES:Importar y exportar archivos csv
+FI:CSV-tiedostojen tuonti ja vienti
+RU:Импорт и экспорт CSV-файлов
+
+tt:You can of course save your tournament for later use, or to share the tournament with others.
+NL:Uiteraard kunt u uw toernooi bewaren voor later gebruik, of om het toernooi te delen met anderen.
+DE:Sie können Ihr Turnier natürlich für eine spätere Verwendung speichern oder mit anderen teilen.
+FR:Vous pouvez bien sûr enregistrer votre tournoi pour une utilisation ultérieure, ou pour partager le tournoi avec d'autres.
+ES:Por supuesto, puede guardar su torneo para su uso posterior o compartirlo con otros.
+FI:Voit tietysti tallentaa turnauksen myöhempää käyttöä varten tai jakaa turnauksen muiden kanssa.
+RU:Конечно, вы можете сохранить свой турнир для последующего использования или поделиться турниром с другими.
+
+tt:It was decided to write and read the data in .csv format (Comma Separated Values).
+NL:Er is voor gekozen om de gegevens in .csv formaat (Comma Separated Values) te schrijven en in te lezen.
+DE:Es wurde beschlossen, die Daten im CSV-Format (Comma Separated Values) zu schreiben und zu lesen.
+FR:Il a été décidé d'écrire et de lire les données au format .csv (valeurs séparées par des virgules).
+ES:Se decidió escribir y leer los datos en formato .csv (valores separados por comas).
+FI:Tiedot päätettiin kirjoittaa ja lukea .csv-muodossa (pilkuin erotetut arvot).
+RU:Было решено записать и прочитать данные в формате .csv (значения, разделенные запятыми).
+
+tt:This format can be processed and generated with any spreadsheet program (Excel, Libreoffice, etc).
+NL:Dit formaat kan worden verwerkt en gegenereerd met elk spreadsheet programma (Excel, Libreoffice, etc).
+DE:Dieses Format kann mit jedem Tabellenkalkulationsprogramm (Excel, Libreoffice usw.) verarbeitet und generiert werden.
+FR:Ce format peut être traité et généré avec n'importe quel tableur (Excel, Libreoffice, etc.).
+ES:Este formato se puede procesar y generar con cualquier programa de hoja de cálculo (Excel, Libreoffice, etc.).
+FI:Tätä muotoa voidaan käsitellä ja luoda millä tahansa taulukkolaskentaohjelmalla (Excel, Libreoffice jne.).
+RU:Этот формат можно обрабатывать и генерировать с помощью любой программы для работы с электронными таблицами (Excel, Libreoffice и т. Д.).
+
+tt:With some skill, you can edit a spreadsheet with players so that it can be imported by the program.
+NL:Met enige handigheid kunt u een spreadsheet met spelers zodanig bewerken dat hij door het programma kan worden geïmporteerd.
+DE:Mit etwas Geschick können Sie eine Tabelle mit Spielern bearbeiten, damit sie vom Programm importiert werden kann.
+FR:Avec certaines compétences, vous pouvez modifier une feuille de calcul avec les joueurs afin qu'elle puisse être importée par le programme.
+ES:Con cierta habilidad, puede editar una hoja de cálculo con los jugadores para que el programa pueda importarla.
+FI:Jollakin taitolla voit muokata laskentataulukkoa pelaajien kanssa, jotta ohjelma voi tuoda sen.
+RU:С некоторыми навыками вы можете редактировать электронную таблицу с игроками, чтобы она могла быть импортирована программой.
+
+tt:To do such a thing you should study a saved tournament by opening it in a spreadsheet program.
+NL:Om zoiets te doen zou u een studie moeten maken van een opgeslagen toernooi door het te openen in een spreadsheet programma.
+DE:Um so etwas zu tun, sollten Sie ein gespeichertes Turnier studieren, indem Sie es in einem Tabellenkalkulationsprogramm öffnen.
+FR:Pour faire une telle chose, vous devez étudier un tournoi enregistré en l'ouvrant dans un tableur.
+ES:Para hacer tal cosa, debes estudiar un torneo guardado abriéndolo en un programa de hoja de cálculo.
+FI:Jotta voit tehdä sellaisen, sinun tulee tutkia tallennettu turnaus avaamalla se laskentataulukko-ohjelmassa.
+RU:Чтобы сделать это, вы должны изучить сохраненный турнир, открыв его в программе электронных таблиц.
+
+tt:With some experimentation you should succeed in creating your own .csv file that is accepted by the program.
+NL:Met wat experimenteren moet het lukken om een eigen .csv bestand te maken dat worden geaccepteerd door het programma.
+DE:Mit einigem Experimentieren sollte es Ihnen gelingen, eine eigene CSV-Datei zu erstellen, die vom Programm akzeptiert wird.
+FR:Avec une certaine expérimentation, vous devriez réussir à créer votre propre fichier .csv qui est accepté par le programme.
+ES:Con algo de experimentación, debería tener éxito en crear su propio archivo .csv que sea aceptado por el programa.
+FI:Joidenkin kokeilujen avulla sinun onnistuu luomaan oma .csv-tiedosto, jonka ohjelma hyväksyy.
+RU:Проведя некоторые эксперименты, вы сможете создать собственный файл .csv, который будет принят программой.
+
+tt:This can be useful if you already have a spreadsheet with player data.
+NL:Dat kan van pas komen als u al een spreadsheet heeft met gegevens van spelers.
+DE:Dies kann nützlich sein, wenn Sie bereits eine Tabelle mit Spielerdaten haben.
+FR:Cela peut être utile si vous disposez déjà d'une feuille de calcul avec les données des joueurs.
+ES:Esto puede ser útil si ya tiene una hoja de cálculo con datos del jugador.
+FI:Tästä voi olla hyötyä, jos sinulla on jo laskentataulukko, jossa on pelaajatiedot.
+RU:Это может быть полезно, если у вас уже есть таблица с данными игрока.
+
+tt:Run from a website or locally
+NL:Draaien vanaf een website of lokaal
+DE:Von einer Website oder lokal ausführen
+FR:Exécuter à partir d'un site Web ou localement
+ES:Ejecutar desde un sitio web o localmente
+FI:Suorita verkkosivustolta tai paikallisesti
+RU:Запуск с веб-сайта или локально
+
+tt:AlracTTG is installed on a website:
+NL:AlracTTG is geïnstalleerd op een website:
+DE:AlracTTG ist auf einer Website installiert:
+FR:AlracTTG est installé sur un site Web:
+ES:AlracTTG está instalado en un sitio web:
+FI:AlracTTG on asennettu verkkosivustoon:
+RU:AlracTTG установлен на веб-сайте:
+
+tt:and perhaps also on other websites.
+NL:en wellicht ook op andere websites.
+DE:und vielleicht auch auf anderen websites.
+FR:et peut-être aussi sur d'autres sites.
+ES:y quizás también en otros sitios web.
+FI:ja ehkä myös muilla verkkosivustoilla.
+RU:и, возможно, также на других сайтах.
+
+tt:However, you can also run alracTTG locally on your own PC without using a website and without using the internet:
+NL:U kunt alracTTG echter ook lokaal op uw eigen PC draaien zonder gebruik van een website en zonder gebruik van het internet:
+DE:Sie können alracTTG jedoch auch lokal auf Ihrem eigenen PC ausführen, ohne eine Website zu verwenden und ohne das Internet zu verwenden:
+FR:Cependant, vous pouvez également exécuter alracTTG localement sur votre propre PC sans utiliser de site Web et sans utiliser Internet:
+ES:Sin embargo, también puede ejecutar alracTTG localmente en su propia PC sin usar un sitio web y sin usar Internet:
+FI:Voit kuitenkin suorittaa alracTTG: n myös paikallisesti omalla tietokoneellasi käyttämättä verkkosivustoa ja Internetiä:
+RU:Однако вы также можете запускать alracTTG локально на своем ПК без использования веб-сайта и без Интернета:
+
+tt:Download the zip file from
+NL:Download het zip bestand van
+DE:Laden Sie die ZIP-Datei von herunter
+FR:Téléchargez le fichier zip depuis
+ES:Descargue el archivo zip de
+FI:Lataa zip-tiedosto osoitteesta
+RU:Загрузите zip-файл с
+
+tt:the name is something like
+NL:de naam is iets als
+DE:der name ist so etwas wie
+FR:le nom est quelque chose comme
+ES:el nombre es algo como
+FI:nimi on jotain
+RU:имя что-то вроде
+
+tt:Extract this zip file. In general you do this by clicking on it.
+NL:Extraheer dit zip bestand. In het algemeen doet u dit door het aan te klikken.
+DE:Extrahieren Sie diese Zip-Datei. Im Allgemeinen tun Sie dies, indem Sie darauf klicken.
+FR:Extrayez ce fichier zip. En général, vous faites cela en cliquant dessus.
+ES:Extrae este archivo zip. En general, haces esto haciendo clic en él.
+FI:Pura tämä zip-tiedosto. Yleensä teet tämän napsauttamalla sitä.
+RU:Распакуйте этот zip-файл. Как правило, вы делаете это, нажав на него.
+
+tt:Open the resulting folder by clicking on it.
+NL:Open de resulterende folder door erop te klikken.
+DE:Öffnen Sie den resultierenden Ordner, indem Sie darauf klicken.
+FR:Ouvrez le dossier résultant en cliquant dessus.
+ES:Abra la carpeta resultante haciendo clic en ella.
+FI:Avaa tuloksena oleva kansio napsauttamalla sitä.
+RU:Откройте получившуюся папку, нажав на нее.
+
+tt:Open the file
+NL:Open het bestand
+DE:Öffne die Datei
+FR:Ouvrez le dossier
+ES:Abre el archivo
+FI:Avaa tiedosto
+RU:Открыть файл
+
+tt:with your favorite web browser.
+NL:met uw favoriete webbrowser.
+DE:mit Ihrem bevorzugten Webbrowser.
+FR:avec votre navigateur Web préféré.
+ES:con tu navegador web favorito.
+FI:suosikkiselaimesi kanssa.
+RU:с вашим любимым веб-браузером.
+
+tt:In general it is sufficient to click on this file.
+NL:In het algemeen is het voldoende om dit bestand aan te klikken.
+DE:Im Allgemeinen reicht es aus, auf diese Datei zu klicken.
+FR:En général il suffit de cliquer sur ce fichier.
+ES:En general, es suficiente hacer clic en este archivo.
+FI:Yleensä riittää napsauttaa tätä tiedostoa.
+RU:В общем, достаточно нажать на этот файл.
+
+tt:If all goes well, you will see the alracTTG home screen and you can get started.
+NL:Als alles goed gaat, ziet u dan het startscherm van alracTTG en kunt u aan de slag.
+DE:Wenn alles gut geht, wird der alracTTG-Startbildschirm angezeigt und Sie können loslegen.
+FR:Si tout se passe bien, vous verrez l'écran d'accueil d'alracTTG et vous pourrez commencer.
+ES:Si todo va bien, verá la pantalla de inicio de alracTTG y podrá comenzar.
+FI:Jos kaikki menee hyvin, näet alracTTG-aloitusnäytön ja voit aloittaa aloittamisen.
+RU:Если все пойдет хорошо, вы увидите домашний экран alracTTG и можете приступить к работе.
+
+tt:The author of the program
+NL:De auteur van het programma
+DE:Der Autor des Programms
+FR:L'auteur du programme
+ES:El autor del programa.
+FI:Ohjelman laatija
+RU:Автор программы
+
+tt:The program has been developed by
+NL:Het programma is ontwikkeld door
+DE:Das Programm wurde von entwickelt
+FR:Le programme a été développé par
+ES:El programa ha sido desarrollado por
+FI:Ohjelman on kehittänyt
+RU:Программа была разработана
+
+tt:More software from his hand can be found at
+NL:Meer programmatuur van zijn hand is te vinden op
+DE:Weitere Software aus seiner Hand finden Sie unter
+FR:Plus de logiciels de sa main peuvent être trouvés sur
+ES:Se puede encontrar más software de su mano en
+FI:Lisää ohjelmistoja hänen kädestään löytyy osoitteesta
+RU:Больше программного обеспечения из его руки можно найти на
+
+tt:As an enthusiastic tennis player, Willem was challenged to help his fellow tennis players in putting together a tournament, without having to do it all by hand.
+NL:Als enthousiaste tennisspeler werd Willem uitgedaagd om zijn mede-tennisspelers te helpen bij het samenstellen van een toernooi, zonder het allemaal met de hand te hoeven doen.
+DE:Als begeisterter Tennisspieler wurde Willem aufgefordert, seinen Mitspielern bei der Zusammenstellung eines Turniers zu helfen, ohne alles von Hand machen zu müssen.
+FR:En tant que joueur de tennis enthousiaste, Willem a été mis au défi d'aider ses collègues joueurs de tennis à organiser un tournoi, sans avoir à tout faire à la main.
+ES:Como entusiasta jugador de tenis, Willem fue desafiado a ayudar a sus compañeros de tenis a organizar un torneo, sin tener que hacerlo todo a mano.
+FI:Innostuneena tennispelaajana Willem haastettiin auttamaan kollegoitaan tennispelissä turnauksen järjestämisessä ilman, että hänen tarvitsisi tehdä kaikkea käsin.
+RU:Как увлеченный теннисист, Виллему пришлось помогать своим товарищам по теннису в организации турнира без необходимости делать все вручную.
+
+tt:This program is the result.
+NL:Dit programma is het resultaat.
+DE:Dieses Programm ist das Ergebnis.
+FR:Ce programme est le résultat.
+ES:Este programa es el resultado.
+FI:Tämä ohjelma on tulos.
+RU:Эта программа является результатом.
+
+tt:Thanks to
+NL:Met dank aan
+DE:Dank an
+FR:Grâce à
+ES:Gracias a
+FI:Kiitokset
+RU:Благодаря
+
+tt:The development of this program would not be possible without the availability of excellent quality Public Domain software, such as:
+NL:De ontwikkeling van dit programma zou niet mogelijk zijn zonder de beschikbaarheid van Public Domain software van uitmuntende kwaliteit, zoals:
+DE:Die Entwicklung dieses Programms wäre ohne die Verfügbarkeit von Public Domain-Software von hervorragender Qualität nicht möglich.
+FR:Le développement de ce programme ne serait pas possible sans la disponibilité de logiciels du domaine public d'excellente qualité, tels que:
+ES:El desarrollo de este programa no sería posible sin la disponibilidad de un software de dominio público de excelente calidad, como:
+FI:Tämän ohjelman kehittäminen ei olisi mahdollista ilman erinomaisen laadun julkisia ohjelmistoja, kuten:
+RU:Разработка этой программы была бы невозможна без наличия высококачественного программного обеспечения Public Domain, такого как:
+
+tt:Operating system
+NL:Besturingssyteem
+DE:Betriebssystem
+FR:Système opérateur
+ES:Sistema operativo
+FI:Käyttöjärjestelmä
+RU:Операционная система
+
+tt:Development environment
+NL:Ontwikkelomgeving
+DE:Entwicklungsumgebung
+FR:Environnement de développement
+ES:Entorno de desarrollo
+FI:Kehitysympäristö
+RU:Среда разработки
+
+tt:Web browsers with Javascript
+NL:Webbrowsers met Javascript
+DE:Webbrowser mit Javascript
+FR:Navigateurs Web avec Javascript
+ES:Navegadores web con Javascript
+FI:Selaimet Javascriptillä
+RU:Веб-браузеры с Javascript
+
+tt:And also free internet facilities such as:
+NL:En daarnaast gratis faciliteiten op het internet zoals:
+DE:Und auch kostenlose Internet-Einrichtungen wie:
+FR:Et aussi des services Internet gratuits tels que:
+ES:Y también servicios gratuitos de internet como:
+FI:Ja myös ilmaiset internetpalvelut, kuten:
+RU:А также бесплатные интернет-услуги, такие как:
+
+tt:Search engines for the internet
+NL:Zoekmachines voor het internet
+DE:Suchmaschinen für das Internet
+FR:Moteurs de recherche pour Internet
+ES:Buscadores para internet
+FI:Internetin hakukoneet
+RU:Поисковые системы для интернета
+
+tt:Courses on www related matters
+NL:Cursussen over www gerelateerde zaken
+DE:Kurse zu www-bezogenen Themen
+FR:Cours sur des sujets liés au www
+ES:Cursos sobre asuntos relacionados con www
+FI:Kurssit www-aiheisiin
+RU:Курсы по вопросам, связанным с WWW
+
+tt:Translation help
+NL:Vertaalhulp
+DE:Übersetzungshilfe
+FR:Aide à la traduction
+ES:Ayuda de traducción
+FI:Käännösohjeet
+RU:Помощь в переводе
+
+tt:Data storage
+NL:Data opslag
+DE:Datenspeicher
+FR:Stockage de données
+ES:Almacenamiento de datos
+FI:Tietovarasto
+RU:Хранилище данных
+
+tt:The look and feel of the program is due to the input of
+NL:De look-and-feel van het programma is te danken aan de inbreng van
+DE:Das Erscheinungsbild des Programms beruht auf der Eingabe von
+FR:L'aspect et la convivialité du programme sont dus à la contribution de
+ES:La apariencia del programa se debe al aporte de
+FI:Ohjelman ulkoasu johtuu panoksesta
+RU:Внешний вид программы обусловлен вкладом
+
+tt:Improvements
+NL:Verbeteringen
+DE:Verbesserungen
+FR:Améliorations
+ES:Mejoras
+FI:Parannuksia
+RU:Улучшения
+
+tt:Of course there is room for improvement: the translated texts but also the program code.
+NL:Uiteraard is er ruimte voor verbetering: de vertaalde teksten maar ook de programma code.
+DE:Natürlich gibt es Raum für Verbesserungen: die übersetzten Texte, aber auch den Programmcode.
+FR:Bien sûr, il y a place à amélioration: les textes traduits mais aussi le code du programme.
+ES:Por supuesto, hay margen de mejora: los textos traducidos pero también el código del programa.
+FI:Tietysti on parantamisen varaa: käännetyt tekstit mutta myös ohjelmakoodi.
+RU:Конечно, есть место для улучшения: переведенные тексты, но также и программный код.
+
+tt:Suggestions for improvement, reports of errors and questions about usage are highly appreciated: you can send them to
+NL:Suggesties voor verbetering, rapportages van fouten en vragen over het gebruik worden zeer op prijs gesteld: u kunt deze sturen naar
+DE:Verbesserungsvorschläge, Fehlerberichte und Fragen zur Nutzung werden sehr geschätzt: Sie können sie an senden
+FR:Les suggestions d'amélioration, les rapports d'erreurs et les questions d'utilisation sont très appréciés: vous pouvez les envoyer à
+ES:Se agradecen las sugerencias de mejora, los informes de errores y las preguntas sobre el uso: puede enviarlos a
+FI:Parannusehdotuksia, virheraportteja ja käyttöä koskevia kysymyksiä arvostetaan suuresti: voit lähettää ne osoitteeseen
+RU:Предложения по улучшению, сообщения об ошибках и вопросы об использовании приветствуются: вы можете отправить их по адресу
+
+tt:the contact form
+NL:het contact formulier
+DE:das Kontaktformular
+FR:le formulaire de contact
+ES:el formulario de contacto
+FI:yhteyslomake
+RU:контактная форма
+
+tt:If you are interested in the translations: you will find in the extracted zip file (see "advanced") the file
+NL:Mocht u geïnteresseerd zijn in de vertalingen: in het uitgepakte zip bestand (zie "geavanceerd") vindt u het bestand
+DE:Wenn Sie an den Übersetzungen interessiert sind: Sie finden in der extrahierten Zip-Datei (siehe "Erweitert") die Datei
+FR:Si vous êtes intéressé par les traductions: vous trouverez dans le fichier zip extrait (voir "avancé") le fichier
+ES:Si está interesado en las traducciones: encontrará en el archivo zip extraído (consulte "avanzado") el archivo
+FI:Jos olet kiinnostunut käännöksistä: Löydät poimitun zip-tiedoston (katso "edistynyt") tiedoston
+RU:Если вас интересуют переводы: вы найдете в распакованном zip-файле (см. «Дополнительно») файл
+
+tt:in which all translations are included.
+NL:waarin alle vertalingen zijn opgenomen.
+DE:in dem alle übersetzungen enthalten sind.
+FR:dans lequel toutes les traductions sont incluses.
+ES:en el que se incluyen todas las traducciones.
+FI:johon kaikki käännökset sisältyvät.
+RU:в который включены все переводы.
+
+tt:You could even add a language.
+NL:U zou zelfs een taal kunnen toevoegen.
+DE:Sie könnten sogar eine Sprache hinzufügen.
+FR:Vous pouvez même ajouter une langue.
+ES:Incluso podrías agregar un idioma.
+FI:Voit jopa lisätä kielen.
+RU:Вы могли бы даже добавить язык.
+
+tt:Number of players
+NL:Aantal spelers
+DE:Anzahl der Spieler
+FR:Nombre de joueurs
+ES:Numero de jugadoras
+FI:Pelaajien lukumäärä
+RU:Количество игроков
+
+tt:add player
+NL:speler toevoegen
+DE:Spieler hinzufügen
+FR:ajouter un joueur
+ES:agregar jugador
+FI:Lisää pelaaja
+RU:добавить игрока
+
+tt:add tennis court
+NL:tennisbaan toevoegen
+DE:Tennisplatz hinzufügen
+FR:ajouter un court de tennis
+ES:agregar cancha de tenis
+FI:lisää tenniskenttä
+RU:добавить теннисный корт
+
+tt:add playing time
+NL:speeltijd toevoegen
+DE:Spielzeit hinzufügen
+FR:ajouter du temps de jeu
+ES:agregar tiempo de juego
+FI:lisää peliaika
+RU:добавить игровое время
+
+tt:No double or single game defined
+NL:Geen dubbel of enkel spel gedefinieerd
+DE:Kein Doppel- oder Einzelspiel definiert
+FR:Aucun jeu double ou simple défini
+ES:No se ha definido un juego doble o único
+FI:Mitään pari- tai yksittäistä peliä ei ole määritelty
+RU:Двойная или одиночная игра не определена
+
+tt:No title defined
+NL:Geen titel gedefinieerd
+DE:Kein Titel definiert
+FR:Aucun titre défini
+ES:No hay título definido
+FI:Otsikkoa ei määritetty
+RU:Название не определено
+
+tt:Number of rounds is zero
+NL:Aantal ronden is nul
+DE:Die Anzahl der Runden ist Null
+FR:Le nombre de tours est nul
+ES:El número de rondas es cero
+FI:Kierrosten lukumäärä on nolla
+RU:Количество раундов равно нулю
+
+tt:Tennis tournament
+NL:Tennistoernooi
+DE:Tennisturnier
+FR:Tournoi de tennis
+ES:Torneo de tenis
+FI:Tennis turnaus
+RU:Теннисный турнир
+
+tt:Click the %s button to save.
+NL:Klik op de %s-knop om op te slaan.
+DE:Klicken Sie zum Speichern auf die Schaltfläche %s.
+FR:Cliquez sur le bouton %s pour enregistrer.
+ES:Haga clic en el botón %s para guardar.
+FI:Tallenna napsauttamalla %s-painiketta.
+RU:Нажмите кнопку %s, чтобы сохранить.
+
+tt:If you really want to start all over and discard the current tournament
+NL:Als u echt helemaal opnieuw wilt beginnen en het huidige toernooi wilt weggooien
+DE:Wenn Sie wirklich von vorne anfangen und das aktuelle Turnier verwerfen möchten
+FR:Si vous voulez vraiment tout recommencer et rejeter le tournoi en cours
+ES:Si realmente quieres comenzar de nuevo y descartar el torneo actual
+FI:Jos haluat todella aloittaa kokonaan ja hylätä nykyisen turnauksen
+RU:Если вы действительно хотите начать все сначала и отказаться от текущего турнира
+
+tt:Click this button
+NL:Klik op deze knop
+DE:Klicken Sie auf diese Schaltfläche
+FR:Cliquez sur ce bouton
+ES:Haga clic en este botón
+FI:Napsauta tätä painiketta
+RU:Нажмите эту кнопку
+
+tt:show
+NL:toon
+DE:zeige
+FR:montre
+ES:muestra
+FI:näytä
+RU:показать
+
+tt:Show
+NL:Toon
+DE:Zeige
+FR:Montre
+ES:Muestra
+FI:Näytä
+RU:Показать
+
+tt:all
+NL:alles
+DE:alles
+FR:tout
+ES:todo
+FI:kaikki
+RU:все
+
+tt:global data
+NL:globale gegevens
+DE:globale Daten
+FR:données globales
+ES:datos globales
+FI:globaalit tiedot
+RU:глобальные данные
+
+tt:playing times
+NL:speeltijden
+DE:Spielzeiten
+FR:temps de jeu
+ES:horarios de juego
+FI:peliajat
+RU:время игры
+
+tt:Playing times needed
+NL:Benodigde speeltijden
+DE:Spielzeiten benötigt
+FR:Temps de jeu nécessaires
+ES:Tiempos de juego necesarios
+FI:Peliajat tarvitaan
+RU:Время игры необходимо
+
+tt:courts
+NL:banen
+DE:Plätze
+FR:courts
+ES:canchas
+FI:kentät
+RU:корт
+
+tt:score form
+NL:score formulier
+DE:Punkteformular
+FR:forme de score
+ES:formulario de puntaje
+FI:pisteet
+RU:форма счета
+
+tt:Gentlemen
+NL:Heren
+DE:Herren
+FR:Messieurs
+ES:Caballeros
+FI:Hyvät herrat
+RU:Господа
+
+tt:Total
+NL:Totaal
+DE:Total
+FR:Total
+ES:Total
+FI:Summa
+RU:итог
+
+tt:Ladies
+NL:Dames
+DE:Damen
+FR:Dames
+ES:Señoras
+FI:Naiset
+RU:Дамы
+
+tt:Score form
+NL:Score formulier
+DE:Ergebnisformular
+FR:Formulaire de score
+ES:Formulario de puntaje
+FI:Tuloslomake
+RU:Форма оценки
+
+tt:The values for %s are for your reference only.
+NL:De waarden voor %s zijn alleen ter referentie.
+DE:Die Werte für %s dienen nur als Referenz.
+FR:Les valeurs pour %s sont pour référence seulement.
+ES:Los valores para %s son solo para su referencia.
+FI:%s-arvot ovat vain viitteellisiä.
+RU:Значения для %s приведены только для справки.
+
+tt:You can put any text in these fields, the program doesn't care.
+NL:U kunt elke tekst in deze velden plaatsen, het programma maakt het niet uit.
+DE:Sie können jeden Text in diese Felder einfügen, das Programm kümmert sich nicht darum.
+FR:Vous pouvez mettre n'importe quel texte dans ces champs, le programme s'en fiche.
+ES:Puede poner cualquier texto en estos campos, al programa no le importa.
+FI:Voit laittaa tekstin näihin kenttiin, ohjelma ei välitä.
+RU:Вы можете поместить любой текст в эти поля, программа не заботится.
+
+tt:Tip: Click on %s to try and improve this result.
+EN:Click on %s to try and improve this result.
+NL:Klik op %s om te proberen dit resultaat te verbeteren.
+DE:Klicken Sie auf %s um zu versuchen dieses Ergebnis zu verbessern.
+FR:Cliquez sur %s pour essayer d'améliorer ce résultat.
+ES:haga clic en %s para probar y mejorar este resultado.
+FI:Kokeile parantaa tulosta napsauttamalla %s.
+RU:Нажмите на %s, чтобы попытаться улучшить этот результат.
+
+tt:Tip: Click on %s to save.
+EN:Click on %s to save.
+NL:Klik op %s om op te slaan.
+DE:Klicken Sie zum Speichern auf %s.
+FR:Cliquez sur %s pour enregistrer.
+ES:Haga clic en %s para guardar.
+FI:Tallenna napsauttamalla %s.
+RU:Нажмите на %s, чтобы сохранить.
+
+tt:none
+NL:geen
+DE:keiner
+FR:nul
+ES:nada
+FI:ei mitään
+RU:никто
+
+tt:Right uppercorner
+NL:Rechter bovenhoek
+DE:Obere rechte Ecke
+FR:Coin supérieur droit
+ES:Esquina superior derecha
+FI:Oikeassa yläkulmassa
+RU:Верхний правый угол
+
+tt:Left uppercorner
+NL:Linker bovenhoek
+DE:Obere linke Ecke
+FR:Coin supérieur gauche
+ES:Esquina superior izquierda
+FI:Vasemmassa yläkulmassa
+RU:Верхний левый угол
+
+tt:Yellow bar, first row
+NL:Gele balk, eerste rij
+DE:Gelber Balken, erste Reihe
+FR:Barre jaune, première rangée
+ES:Barra amarilla, primera fila
+FI:Keltainen palkki, ensimmäinen rivi
+RU:Желтая полоса, первый ряд
+
+tt:Yellow bar, second row
+NL:Gele balk, tweede rij
+DE:Gelber Balken, zweite Reihe
+FR:Barre jaune, deuxième rangée
+ES:Barra amarilla, segunda fila
+FI:Keltainen palkki, toinen rivi
+RU:Желтая полоса, второй ряд
+
+tt:Tip: Not satisfied: Click on %s to edit.
+EN:Not satisfied: Click on %s to edit.
+NL:Niet tevreden: klik op %s om te bewerken.
+DE:Nicht zufrieden: Klicken Sie zum Bearbeiten auf %s.
+FR:Insatisfait: cliquez sur %s pour modifier.
+ES:No satisfecho: haga clic en %s para editar.
+FI:Ei tyytyväinen: Napsauta %s muokataksesi.
+RU:Не удовлетворен: нажмите на %s для редактирования.
+
+tt:Tip: Satisfied: Click on %s to see the schedules.
+EN:Satisfied: Click on %s to see the schedules.
+NL:Tevreden: Klik op %s om de schema's te bekijken.
+DE:Zufrieden: Klicken Sie auf %s, um die Zeitpläne anzuzeigen.
+FR:Satisfait: Cliquez sur %s pour voir les horaires.
+ES:Satisfecho: haga clic en %s para ver los horarios.
+FI:Tyytyväinen: Napsauta %s nähdäksesi aikataulut.
+RU:Выполнено: нажмите на %s, чтобы увидеть расписание.
+
+tt:The file chosen is not a file created by alracTTG.
+NL:El archivo elegido no es un archivo creado por alracTTG.
+DE:Die ausgewählte Datei ist keine von alracTTG erstellte Datei.
+FR:Le fichier choisi n'est pas un fichier créé par alracTTG.
+ES:El archivo elegido no es un archivo creado por alracTTG.
+FI:Valittu tiedosto ei ole alracTTG: n luoma tiedosto.
+RU:Выбранный файл не является файлом, созданным alracTTG.
+
+tt:Try again.
+NL:Probeer het opnieuw.
+DE:Versuch es noch einmal.
+FR:Réessayer.
+ES:Inténtalo de nuevo.
+FI:Yritä uudelleen.
+RU:Попробуйте еще раз.
+
+tt:CANCEL
+NL:ANNULEREN
+DE:STORNIEREN
+FR:ANNULER
+ES:CANCELAR
+FI:PERUUTTAA
+RU:ОТМЕНА
+
+tt:Tip: For usage information: click the %s button.
+EN:For usage information: click the %s button.
+NL:Voor gebruiksinformatie: klik op de %s knop.
+DE:Informationen zur Verwendung: Klicken Sie auf die Schaltfläche %s.
+FR:Pour des informations sur l'utilisation: cliquez sur le bouton %s.
+ES:Para información de uso: haga clic en el botón %s.
+FI:Käyttötiedot: napsauta %s-painiketta.
+RU:Для получения информации об использовании: нажмите кнопку %s.
+
+tt:Click %s to undo the last change
+NL:Klik op %s om de laatste wijziging ongedaan te maken
+DE:Klicken Sie auf %s, um die letzte Änderung rückgängig zu machen
+FR:Cliquez sur %s pour annuler la dernière modification
+ES:Haga clic en %s para deshacer el último cambio.
+FI:Kumoa viimeinen muutos napsauttamalla %s
+RU:Нажмите %s, чтобы отменить последнее изменение
+
+tt:Click %s to cancel the last undo
+NL:Klik op %s om de laatste undo te annuleren
+DE:Klicken Sie auf %s, um das letzte Rückgängigmachen abzubrechen
+FR:Cliquez sur %s pour annuler la dernière annulation
+ES:Haga clic en %s para cancelar el último deshacer
+FI:Napsauta %s peruuttaaksesi viimeisen kumoamisen
+RU:Нажмите %s, чтобы отменить последнюю отмену
+
+tt:Tabs and buttons
+NL:Tabbladen en knoppen
+DE:Registerkarten und Schaltflächen
+FR:Onglets et boutons
+ES:Pestañas y botones
+FI:Välilehdet ja painikkeet
+RU:Вкладки и кнопки
+
+tt:You can print an empty score board, to be filled in by hand.
+NL:Print een leeg scorebord. U kunt dit met de hand invullen.
+DE:Sie können eine leere Anzeigetafel drucken, die von Hand ausgefüllt werden muss.
+FR:Vous pouvez imprimer un tableau d'affichage vide, à remplir à la main.
+ES:Puede imprimir un tablero de puntuación vacío, que se completará a mano.
+FI:Voit tulostaa tyhjän tulostaulun, joka täytetään käsin.
+RU:Вы можете распечатать пустое табло, заполняемое вручную.
+
+tt:Clear the form.
+NL:Wis de inhoud van het formulier.
+DE:Löschen Sie das Formular.
+FR:Effacez le formulaire.
+ES:Limpia el formulario.
+FI:Tyhjennä lomake.
+RU:Очистить форму.
+
+tt:Example form
+NL:Voorbeeld formulier
+DE:Beispielformular
+FR:Exemple de formulaire
+ES:Formulario de ejemplo
+FI:Esimerkki lomakkeesta
+RU:Пример формы
+
+tt:You will usually find a saved tournament at Downloads on your PC.
+NL:Een opgeslagen toernooi vindt u meestal bij Downloads op uw PC.
+DE:Normalerweise finden Sie ein gespeichertes Turnier unter Downloads auf Ihrem PC.
+FR:Vous trouverez généralement un tournoi enregistré dans Téléchargements sur votre PC.
+ES:Por lo general, encontrará un torneo guardado en Descargas en su PC.
+FI:Tallennetut turnaukset löydät yleensä tietokoneesi latauksista.
+RU:Обычно вы можете найти сохраненный турнир в разделе «Загрузки» на вашем ПК.
+
+tt:Number of players/rounds/courses does not fit in the specified playing times:
+NL:Aantal spelers/rondes/banen past niet in de opgegeven speeltijden:
+DE:Die Anzahl der Spieler/Runden/Kurse passt nicht zu den angegebenen Spielzeiten:
+FR:Le nombre de joueurs/tours/parcours ne correspond pas aux temps de jeu spécifiés:
+ES:El número de jugadores/rondas/cursos no se ajusta a los tiempos de juego especificados:
+FI:Pelaajien/kierrosten/kurssien lukumäärä ei sovi määriteltyihin peliaikoihin:
+RU:Количество игроков/раундо /курсов не соответствует указанному времени игры:
+
+tt:There are too many playing times for the number of players/rounds/courses:
+NL:Er zijn teveel speeltijden voor het aantal spelers/rondes/banen:
+DE:Es gibt zu viele Spielzeiten für die Anzahl der Spieler/Runden/Kurse:
+FR:Il y a trop de temps de jeu pour le nombre de joueurs/tours/parcours:
+ES:Hay demasiados tiempos de juego para la cantidad de jugadores/rondas/cursos:
+FI:Pelaajien/kierrosten/kurssien lukumäärällä on liian monta peliaikaa:
+RU:Количество игроков/раундов/курсов слишком велико:
+
+tt:An extra playing time is needed.
+NL:Een extra speeltijd is nodig.
+DE:Eine zusätzliche Spielzeit ist erforderlich.
+FR:Un temps de jeu supplémentaire est nécessaire.
+ES:Se necesita un tiempo de juego extra.
+FI:Ylimääräinen peliaika tarvitaan.
+RU:Требуется дополнительное игровое время.
+
+tt:%s extra playing times are required.
+NL:%s extra speeltijden zijn nodig.
+DE:Es sind %s zusätzliche Spielzeiten erforderlich.
+FR:%s temps de jeu supplémentaires sont nécessaires.
+ES:Se requieren %s tiempos de juego adicionales.
+FI:Tarvitaan %s ylimääräistä peliaikaa.
+RU:Требуется %s дополнительных игровых времен.
+
+tt:Click %s to save the result.
+NL:Klik op %s om het resultaat te bewaren.
+DE:Klicken Sie auf %s, um das Ergebnis zu speichern.
+FR:Cliquez sur %s pour enregistrer le résultat.
+ES:Haga clic en %s para guardar el resultado.
+FI:Tallenna tulos napsauttamalla %s.
+RU:Нажмите %s, чтобы сохранить результат.
+
+tt:Take notice of the %s and %s buttons.
+NL:Let op de knoppen %s en %s.
+DE:Take notice of the %s and %s buttons.
+FR:Prenez note des boutons %s et %s.
+ES:Tenga en cuenta los botones %s y %s.
+FI:Ota huomioon %s- ja %s-painikkeet.
+RU:Обратите внимание на кнопки UNDO и %s.
+
+tt:Discard current tournament and start all over:
+NL:Gooi het huidige toernooi weg en begin opnieuw:
+DE:Verwerfe das aktuelle Turnier und beginne von vorne:
+FR:Jeter le tournoi en cours et recommencer à zéro:
+ES:Descarta el torneo actual y comienza de nuevo:
+FI:Hylkää nykyinen turnaus ja aloita alusta:
+RU:Отменить текущий турнир и начать все сначала:
+
+tt:START ALL OVER
+NL:OPNIEUW BEGINNEN
+DE:VON VORNE BEGINNEN
+FR:TOUT RECOMMENCER
+ES:EMPEZAR TODO DE NUEVO
+FI:ALOITTAA ALUSTA
+RU:НАЧАТЬ ВСЕ НАД
+
+tt:Click %s for an empty printable score form.
+NL:Klik op %s voor een leeg afdrukbaar scoreformulier.
+DE:Klicken Sie auf %s, um ein leeres druckbares Bewertungsformular zu erhalten.
+FR:Cliquez sur %s pour un formulaire de partition imprimable vide.
+ES:Haga clic en %s para obtener un formulario de puntuación imprimible vacío.
+FI:Napsauta %s tyhjää tulostettavaa tuloslomaketta.
+RU:Нажмите %s, чтобы открыть пустую форму для печати.
+
+tt:Improving the result can change the number of playing times needed.
+NL:Door het resultaat te verbeteren, kan het aantal benodigde speeltijden veranderen.
+DE:Durch die Verbesserung des Ergebnisses kann die Anzahl der benötigten Spielzeiten geändert werden.
+FR:L'amélioration du résultat peut modifier le nombre de temps de jeu nécessaires.
+ES:Mejorar el resultado puede cambiar la cantidad de tiempos de juego necesarios.
+FI:Tuloksen parantaminen voi muuttaa tarvittavien peliaikojen määrää.
+RU:Улучшение результата может изменить количество необходимого времени игры.
+
+tt:unknown
+NL:onbekend
+DE:Unbekannt
+FR:inconnue
+ES:desconocido
+FI:tuntematon
+RU:неизвестный
+
+tt:Click %s to see the final result.
+NL:Klik op %s om het eindresultaat te zien.
+DE:Klicken Sie auf %s, um das Endergebnis anzuzeigen.
+FR:Cliquez sur %s pour voir le résultat final.
+ES:Haga clic en %s para ver el resultado final.
+FI:Napsauta %s nähdäksesi lopputuloksen.
+RU:Нажмите %s, чтобы увидеть окончательный результат.
+
+tt:
+NL:
+DE:
+FR:
+ES:
+FI:
+RU:
+// end of translation table
+</pre>
+</body>
+</html>

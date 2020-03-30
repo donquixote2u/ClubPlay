@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Starting Tennis Tournament Generator</title>
+    <style>
+.ttg_welcome{
+    text-align:       center;
+    font-size:        150%;
+    background-color: #cc6;
+}
+#ttg_logo{
+    width:        400px;
+    display:      block;
+    margin-left:  auto;
+    margin-right: auto;
+}
+#ttg_logo_td{
+    padding:          100px;
+    /*  bvw background-image: linear-gradient(#f6e952,#dddddd); */
+}
+.ttg_multilanguage{
+    /* bvw background-color: #ff6;*/
+    background-color: #cc6;
+    padding-left:     200px;
+}
+body:hover {
+    cursor: pointer;
+}
+    </style>
+    <link rel="stylesheet" type="text/css" href="ttg.css">
+</head>
+<body>
+    <table class="center" style="margin-top:100px">
+        <tr>
+            <td id="ttg_welcome" class="ttg_welcome"></td>
+        </tr>
+        <tr>
+            <td id="ttg_logo_td"><img id="ttg_logo" src="tennisgenerator.png"
+            alt="ttg logo"></td>
+        </tr>
+    </table>
+    <br>&nbsp;<br>&nbsp;<br>&nbsp;<br>&nbsp;
+    <br>&nbsp;<br>&nbsp;<br>&nbsp;<br>&nbsp;
+    <br>&nbsp;<br>&nbsp;<br>&nbsp;<br>&nbsp;
+    <br>&nbsp;<br>&nbsp;<br>&nbsp;<br>&nbsp;
+    <br>&nbsp;<br>&nbsp;<br>&nbsp;<br>&nbsp;
+    <pre id="ttg_trans" style="display:none;">
+tt:Welcome to ALRAC's TENNIS TOURNAMENT GENERATOR
+NL:Welkom bij ALRAC's TENNISTOERNOOIGENERATOR
+DE:Willkommen beim TENNIS-TURNIER-GENERATOR von ALRAC
+FR:Bienvenue chez ALRAC TENNIS TOURNAMENT GENERATOR
+ES:Bienvenido al generador de torneos de tenis de ALRAC
+FI:Tervetuloa ALRACin TENNIS-TURNAMENTTI-GENERAATTORIIN
+RU:Добро пожаловать в ТЕННИСНЫЙ ГЕНЕРАТОР АЛРАКА
+
+tt:Click on the logo to continue
+NL:Klik op het logo om door te gaan
+DE:Klicken Sie auf das Logo, um fortzufahren
+FR:Cliquez sur le logo pour continuer
+ES:Haga clic en el logo para continuar
+FI:Napsauta logoa jatkaaksesi
+RU:Нажмите на логотип, чтобы продолжить
+
+tt:and put together your tennis tournament
+NL:en stel uw tennistoernooi samen
+DE:und stellen Sie Ihr Tennisturnier zusammen
+FR:et organisez votre tournoi de tennis
+ES:y arma tu torneo de tenis
+FI:ja koota tennisturnauksesi
+RU:и собрать свой теннисный турнир
+    </pre>
+    <script src="jquery-3.4.1.min.js"></script> 
+    <script src="ttg-trans.js"></script> 
+    <script>
+
+   "use strict";
+   var ttg_win;
+   var started = false;
+   var Text = {};
+   var Language= "";
+   var Languages = {};
+   // returns 'NL' or 'EN' etc.
+   function countrycode()
+   {
+       var languageString = navigator.language || navigator.userLanguage || '';
+       var language = languageString.split(/[_-]/)[0].toUpperCase();
+       return language;
+   }
+
+   function atload()
+   {
+       console.log("ttg_win3",ttg_win.location.href);
+       ttg_win.focus();
+       $("body").off().click(function(){ttg_win.focus();});
+       ttg_win.removeEventListener('unload', atunload);
+       ttg_win.addEventListener   ('unload', atunload);
+       started = true;
+   }
+
+   function atunload()
+   {
+      console.log("atunload...",ttg_win.location.href);
+      started = false;
+      $(document).ready( function()
+         {
+            $("body").off().click(function(){console.log("starting start_ttg");start_ttg();});
+            started = false;
+         });
+   }
+
+   function start_ttg() 
+   {
+       console.log("start_ttg...",started);
+       scroll(0,0);
+       if(started)
+           return;
+       ttg_win = window.open("ttg.html", "ttg_window", 
+         "toolbar=no,menubar=no,scrollbars=yes,resizable=yes,top=100,left=100,width=1024,height=768",
+         false);
+       console.log("ttg_win",ttg_win.location.href);
+       ttg_win.removeEventListener('load', atload);
+       ttg_win.addEventListener   ('load', atload);
+   }
+
+
+   $(document).ready(
+           function()
+           {
+               make_trans();
+               Language = countrycode();
+               $("body").off().click(function(){console.log("starting 1 ...");start_ttg();});
+               $('#ttg_welcome').html(
+                   '<b>'+tr("Welcome to ALRAC's TENNIS TOURNAMENT GENERATOR")+'</b><br><br>'
+                   + '<b>'+tr("Click on the logo to continue") + '</b><br>'
+                   + tr("and put together your tennis tournament")
+                   );
+           }
+       );
+    </script>
+</body>
+</html>

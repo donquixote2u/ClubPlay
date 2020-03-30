@@ -1,0 +1,96 @@
+ttg-0.94:
+	README.txt: better text
+	ttg-globals.js: take care that in example: title, 
+	   single/double and rounds are not filled in.
+ttg-0.93:
+	pre1:
+	ttg-tabs.js: fixed bug which caused the misfits visible in 
+	   start after improving schedules
+	   Larger space for message (show_messages())
+	ttg-data: save(): correct bug if players.length%ppg != 0
+	ttg-edit.js: simplify deletion of players
+	ttg.html: introduce male/female symbols in stead of m/f
+	show warning about number of players etc. only when
+	   clicking SAVE, SCHEDULES, SCORE BOARD
+	ttg-edit.js: show number of players in caption
+	ttg-edit.js: hopefully fixed bug in undo-redo
+	ttg-edit.js: change + into 'add player' etc.
+	ttg-tabs.js: start with HELP page
+	ttg-tabs.js: sort languages
+	ttg-data.js, ttg-globals.js: choose between initialization
+	  of rounds, title and double/single when generating
+	  example input. For development, set Fastgen = true,
+	  for production: Fastgen=false, so new users are forced
+	  to look at those input fields.
+	pre2:
+	ttg-edit.js: remove unnecessary code
+	all: changed <i> ... </i> by function emph() see ttg-main.js
+	ttg-text.js: change text of start screens
+	ttg-edit.js: change headers of columns to make sort function more 
+	   visible
+	ttg-schedule.js: let user choose what table to show
+	   add score form, to fill in by hand.
+	ttg-edit: add help texts for timetable-Time and courts-Name
+	ttg-text: minor changes in show_intro()
+	ttg-schedule: optimizing now stops after 20 seconds
+	pre3:
+	some minor clarifications and minor bug fixes
+	pre4:
+	alracttg.html: make whole body clickable, change cursor to pointer
+	pre5:
+	introduce ppg = 0: type of game is 'none'
+	some better texts and some trivial changes
+	pre6:
+	ttg-text.js: minor changes in intro()
+	all: change male and female symbols to  'm' 'f', but leave 'm/v'
+	   as symbols
+	all: move contextual buttons to main navigation (yellow bar)
+	pre7:
+	ttg_edit.js: fix bug related to importing a tournament with 
+	  zero courts active in a timetable row.
+	ttg.css: minir changes to look of buttons
+	pre8:
+	Add header to each page class: "ttg_header"
+	ttg-score.js: fix bug in start_score() when ppg == 0
+	ttg.css: add alternative for checkbox: the colors
+	   of a standard checkbox are different for each browser
+	pre9:
+	some textual adjustments
+	take appropriate action is user imports a non-alracTTG csv
+	add CANCEL button next to IMPORT
+	pre10:
+	Nicer layout for 'Play time overview'
+	use function tips() to show tips
+	ttg-edit.js: use nice colors for focus and hover
+	  Better appearance for the courts checkboxes
+	pre11:
+	Better texts. Extra tips.
+	pre12:
+	ttg-schedule.js: Better layout
+	paypal nu in own window
+	ttg-edit.js: fix focus bug
+	pre13:
+	added some translations for untranslated texts
+	pre14:
+	added number of timeslots as a hidden criterium:
+	  the less, the better
+	some layout improvements
+	pre15:
+	minor adjustments in lay-out schedules
+
+ttg-0.92:
+	use one donate button
+	added translations
+	put translations in ttg-trans.txt
+	create startup html page alracttg.html
+	change for (var x of y) into traditional for(var i=0; i<y.length;
+	  i++) { var x=y[i]; ...
+	alracttg.html: correct some JavaScript mistakes
+	ttg-edit.js: give warning when any item has changed
+	ttg-tabs.js: make tab-buttons active as appropriate
+ttg-0.91:
+	Changed name: ttg -> alracttg, ttg.html -> alracttg.html
+	changed background-color of contextual buttons to #ccf
+	removed 'version' from csv export and import
+ttg-0.9:
+	Initial release

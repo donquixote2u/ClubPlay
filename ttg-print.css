@@ -1,0 +1,54 @@
+@media print {
+   @page { 
+      margin-left:  5mm;
+      margin-right: 5mm;
+   }
+
+   body {
+      /*font: 12pt Georgia, "Times New Roman", Times, serif;*/
+      font: 12pt sans-serif;
+      line-height: 1.2;
+      background:  #fff !important;
+      color:       #000;
+   }
+
+   .no-print { 
+      display: none;
+   }
+
+   button {
+      display: none;
+   }
+
+   #ttg_scroll{
+      padding-top: 0px !important;
+   }
+   h1 {
+      font-size: 20pt;
+   }
+
+   h2, h3, h4 {
+      font-size: 14pt;
+      margin-top: 25px;
+   }    
+
+   table { 
+      /* page-break-inside:  avoid; */
+      /* break-inside:       avoid; */
+      /* box-decoration-break: clone; */
+      /*page-break-after:     always;*/
+   }
+
+   h3.print_only {
+      display: block;
+      page-break-before: always;
+   }
+
+   .pagebreak {
+      page-break-before: always;
+   }
+   .nopagebreak{
+      page-break-inside:  avoid;
+      break-inside:       avoid;
+   }
+}

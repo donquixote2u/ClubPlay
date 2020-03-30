@@ -1,0 +1,22 @@
+#!/bin/bash
+version="`awk '/Version /{print $4}'<ttg-globals.js|tr -d '";\r'`"
+echo "Version = $version"
+dir="alracttg-$version"
+files="
+button_donate.png         makezip          ttg-genetics.js  ttg-tabs.js
+startpage.jpg	          ttg-globals.js   ttg-text.js      ball2.jpg
+tennisgenerator.png       alracttg.html    ttg-trans.js     index.html
+ttg.css		          ttg-main.js	   ttg-utils.js     varrows.png
+ttg-csv.js	          ttg-print.css    ttg.html         harrows.png
+ttg-data.js	          ttg-schedule.js  ttg-trans.txt
+jquery-3.4.1.min.js       ttg-edit.js	   ttg-score.js
+ChangeLog                 README.txt       tip.png
+"
+cp alracttg.html index.html
+mkdir -p ../alracttg-versions
+rm -rf "../alracttg-versions/$dir"
+mkdir -p "../alracttg-versions/$dir"
+cp $files "../alracttg-versions/$dir"
+cd ../alracttg-versions
+zip -r "$dir.zip" "$dir"
+rm -rf "$dir"

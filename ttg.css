@@ -1,0 +1,583 @@
+body {
+   font-family: Sans-Serif;
+}
+#ttg_img{
+   height: 105px;
+   width:  363px;
+   padding: 15px;
+}
+#ttg_img:hover{
+   cursor: pointer;
+}
+
+#ttg_start_div{
+   height:       400px;
+}
+#ttg_start_img_div{
+   float:        left; 
+   margin-left:  40px;
+   margin-right: 100px;
+   margin-top:   60px;
+}
+#ttg_start_img {
+   height:      250px;
+   width:       444px;
+}
+#ttg_tab_buttons{
+   text-align: center;
+}
+#ttg_show_buttons{
+   background-color: white;
+}
+/* bvw hide top row  */
+#ttg_top_row { display: none; }
+
+#ttg_donate_container{
+   position:   relative;
+   text-align: center;
+   width:      140px;
+   height:      47px;
+}
+
+/* delete buttons in editor: */
+.ttg_edit_delbutton{
+}
+
+.ttg_edit_delbutton:hover{
+}
+
+/* sort buttons in editor: */
+.ttg_edit_sortbutton{
+}
+.ttg_edit_sortbutton:hover{
+}
+
+/* gender buttons in editor: */
+.ttg_edit_genderbutton{
+}
+.ttg_edit_genderbutton:hover{
+}
+
+/* strength buttons in editor: */
+.ttg_edit_strengthbutton{
+}
+.ttg_edit_strengthbutton:hover{
+}
+
+/* checkbox for timetable in editor */
+/* if this gives your trouble, remove this */
+/* input[type='checkbox'].ttg_edit_timetable_button{ */
+.ttg_edit_timetable_button{
+   /*width: 10px !important;
+   height: 10px !important;
+   margin: 1px;*/
+   /*outline: 1px solid #00c900;*/
+   -webkit-appearance: none;
+   -moz-appearance: none;
+   -o-appearance: none;
+   appearance:none;
+   box-shadow: none;
+   /* font-size: 1em; */
+   padding: 0.6em 0.6em;
+   border: 1px solid #e59138;
+   border-radius: 1em;
+   background-color: inherit;
+}
+/*input[type='checkbox'].ttg_edit_timetable_button:checked{*/
+.ttg_edit_timetable_button:checked{
+   /*outline: 0px solid red;*/
+   border: 1px solid #e59138;
+   background-color:#e59138;/* #00c900;*/
+}
+.ttg_edit_timetable_button:hover{
+   /*outline: 0px solid #00c900;*/
+   background-color: #00c900;
+   border: 1px solid #00c900;
+}
+
+/* this one is not received well by old version of epiphany: */
+/* #ttg_donate_button_text{ */
+/* position:  absolute; */
+/* top:       50%; */
+/* left:      50%; */
+/* transform: translate(-50%, -50%); */
+/* color:     black; */
+/* font-size: 16px; */
+/* } */
+
+#ttg_donate_button_text{
+   position:   absolute;
+   text-align: center;
+   width:      140px;
+   height:     47px;
+   margin-top: 14px;
+   color:      black;
+   font-size:  16px;
+   z-index:    10;
+}
+
+#ttg_donate_img{
+   width:      140px;
+   height:      47px;
+}
+
+#ttg_disclaimer{
+   font-size: 60%;
+}
+
+table.ttg_tips_table{
+   border: 1px solid #00c900;
+   /*border: 2px solid #e59138;*/
+}
+
+table.ttg_tips_table td{
+   text-align: left;
+}
+
+#ttg_download_button, #ttg_importdata_button, #ttg_start_donate_button{
+   /*background-color: #00c900;*/
+}
+#ttg_computing_button_start,#ttg_computing_button_stop,#ttg_computing_button_schedule{
+   height:    4em; 
+   font-size: 110%
+}
+
+/* container for help and about-texts */
+div.ttg_text_container{
+   text-align: center;
+}
+
+/* layout of help and about-texts */
+div.ttg_text_layout{
+   text-align: left;
+   max-width:  1000px;
+   display:    inline-block;
+}
+
+td.ttg_intro_item{
+   vertical-align:  top;
+}
+table {
+   border-radius: 0em;
+   border:        1px solid black;
+   /*border-collapse: collapse;*/
+   border-spacing: 0px;
+   table-layout:   fixed;
+}
+
+table.center {
+   margin-left:  auto; 
+   margin-right: auto;
+}
+
+table td.border {
+   border:          1px solid black;
+   border-collapse: collapse;
+}
+
+.no_border{
+   border: 0px;
+}
+
+table td,th {
+   padding-left:  0.5em;
+   padding-right: 0.5em;
+}
+table caption {
+   font-size: 120%;
+}
+
+table.form_table{
+   border-radius:  0em;
+   border:         1px solid black;
+   border-spacing: 0px;
+   table-layout:   fixed;
+}
+
+table.form_table td,table.form_table th {
+   border:          1px solid black;
+   border-collapse: collapse;
+   text-align:      left;
+}
+
+.playershort {
+   white-space:   nowrap;
+   overflow:      hidden;
+   text-overflow: ellipsis;
+   width:         150px;
+   text-align:    left;
+}
+.playershorter {
+   white-space:   nowrap;
+   overflow:      hidden;
+   text-overflow: ellipsis;
+   width:         100px;
+   text-align:    left;
+}
+
+.playerlong {
+   white-space:   nowrap;
+   overflow:      hidden;
+   text-overflow: ellipsis;
+   width:         200px;
+   text-align:    left;
+}
+.timeshort {
+   white-space:   nowrap;
+   overflow:      hidden;
+   text-overflow: ellipsis;
+   width:         115px;
+   text-align:    left;
+}
+.timelong {
+   white-space:   nowrap;
+   overflow:      hidden;
+   text-overflow: ellipsis;
+   width:         200px;
+   text-align:    left;
+}
+.courtshort {
+   white-space:   nowrap;
+   overflow:      hidden;
+   text-overflow: ellipsis;
+   width:         100px;
+   text-align:    left;
+}
+.courtlong {
+   white-space:   nowrap;
+   overflow:      hidden;
+   text-overflow: ellipsis;
+   width:         200px;
+   text-align:    left;
+}
+.player_long {
+   white-space:   nowrap;
+   overflow:      hidden;
+   text-overflow: clip;
+   text-align:    left;
+}
+
+.nr {
+   width:      1.5em;
+   text-align: right;
+}
+
+.print_only {
+   display: none;
+}
+
+#myProgress {
+   width:            100%;
+   background-color: grey;
+}
+
+#myBar {
+   width:            1%;
+   height:           30px;
+   background-color: green;
+}
+
+.help {
+   display:          none;
+}
+
+
+.ttg_yellow:hover{
+   background-color: Gold !important;
+}
+
+.ttg_yellow{
+   background-color:yellow !important;
+}
+
+.ttg_header{
+   color:      #e59138;
+}
+
+/* invulveld */
+input {
+   border-width:  1px;
+   border-radius: 0em;
+   padding: 0.3em 1em;
+}
+
+label span:hover{
+   background-color: #00c900 !important;
+}
+
+/* hover van het invulveld */
+input.intext:hover {
+   background-color: #00c900;
+}
+
+/* focus van invulveld */
+input.intext:focus{
+   background-color: inherit;
+}
+
+/* algemene button */
+button {
+   padding:          1px 0.5em;
+   color:            black;
+   background-color: #ccf;
+   background-color: #d9d9d9;
+   cursor:           pointer;
+   border-radius:    0em;
+   border-width:     2px;
+}
+
+/* hover algemene button */
+button:hover {
+   background-color: #00c900;
+}
+
+input.intext {
+   width:      16em;/*auto; /*300px;*/
+   text-align: left;
+}
+
+span:hover + .help {
+   display: block;
+}
+
+.form-popup {
+   display:          none;
+   border:           1px solid black;
+   background-color: #c6e2ff;
+}
+
+.open-button {
+   width:            1em;
+   background-color: #d9d9d9;
+}
+
+
+/* for nice display of one-letter choice */
+/* usage:   */
+
+/* <label><input value="2" type="radio" "ttg_edit_ppg" id="ttg_edit_ppg" checked ><span>s</span></input></label> */
+/* <label><input value="4" type="radio" "ttg_edit_ppg" id="ttg_edit_ppg"         ><span>d</span></input></label> */
+
+label {
+   display:      block; 
+   padding:      5px; 
+   position:     relative; 
+   padding-left: 20px;
+}
+label input {
+   display:     none;
+}
+label span {
+   border:              1px solid #ccc; 
+   width:               1.3em; 
+   height:              1em; 
+   position:            absolute; 
+   overflow:            hidden; 
+   line-height:         1; 
+   text-align:          center; 
+   border-radius:       100%; 
+   font-size:           12pt; 
+   font-family:         Sans-Serif; 
+   left:                0; 
+   top:                 50%; 
+   margin-top:          -0.5em;
+   cursor:      pointer;
+}
+input:checked + span {
+   background:   #d9d9d9; /* #ccf; */
+   border-color: #ccf;
+}
+/* end for nice display of one-letter choice */
+
+.tooltip {
+   position:      relative;
+   display:       inline-block;
+   border-bottom: 1px dotted black;
+   cursor:        pointer;
+}
+
+.tooltip .tooltiptext {
+   visibility:         hidden;
+   width:              120px;
+   background-color:   #555;
+   color:              #fff;
+   text-align:         center;
+   border-radius:      6px;
+   padding:            5px 0;
+   position:           absolute;
+   z-index:            12;
+   bottom:             125%;
+   left:               50%;
+   margin-left:        -60px;
+   opacity:            0;
+   transition: opacity 0.3s;
+}
+
+.tooltip .tooltiptext::after {
+   content:      "";
+   position:     absolute;
+   top:          100%;
+   left:         50%;
+   margin-left: -5px;
+   border-width: 5px;
+   border-style: solid;
+   border-color: #555 transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+   visibility: visible;
+   opacity:    1;
+}
+
+/* Style the tab */
+/* de gele balk */
+.tab {
+   overflow:         hidden;
+   border:           0px solid #000;
+   border-right: 0;
+   border-left: 0;
+   /*background-color: #f1f1f1;*/
+   background-color: #f7eb28;
+   /*background-image: linear-gradient(yellow,white);*/
+}
+
+/* Style the buttons that are used to open the tab content */
+/* buttons in de gele balk */
+.tab button {
+   background-color: inherit;
+
+   /*background-image: linear-gradient(yellow,white);*/
+   /*border-radius:    0;*/
+   /*border:           1;*/
+   border-color:     #d9d9d9;
+   /*float:            left; */
+   /*outline:          none;*/
+   cursor:           pointer;
+   padding:          8px 8px;  /* height, distance */
+   transition:       0.3s;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+   /*color: #7b3337; */
+   background-color: #e59138; /*#da8153;*/
+}
+
+.tab button:disabled {
+   opacity: 0.4;
+   cursor: not-allowed;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+   color: #7b3337;
+}
+
+/* Style the tab content */
+.tabcontent {
+   display:    none;
+   padding:    6px 12px;
+   border:     1px solid #ccc;
+   border-top: none;
+} 
+
+/* gradient in de header */
+#ttg_sticky{
+   position: fixed;
+   width: 100%;
+   margin-left: -8px; padding-top: 10px;
+   /* bvw background-color: #f62952; */
+   background-color: #cccc66;
+   /* bvw background-image: linear-gradient(#f6e952,#dddddd); */
+   top: 0;
+   z-index: 10;
+}
+.sticky {
+   position: fixed !important;
+   top: 0;
+   width: 100%;
+   /*right: 0px; */
+   /*left: 0px; */
+}
+#ttg_tab_page{
+   /*padding-top: 150px; */
+}
+#ttg_scroll {
+   padding-top: 140px;
+}
+
+#ttg_top_row{
+   overflow:   hidden;
+   min-height: 2px;
+}
+#ttg_top_row_left{
+   float:       left;
+   margin-left: 2em
+}
+#ttg_top_row_right{
+   float:        right;
+   margin-right: 2em
+}
+
+/*button.ttg_language_button{ */
+/*   background:       inherit; */
+/*   border:           none; */
+/*}*/
+
+button.ttg_language_button.active{
+   background:       inherit;
+   border:           none;
+}
+
+/* buttons bij de schema's */
+button.ttg_show_button{
+   color:            grey;
+   background-color: white;
+   border:           none;
+}
+button.ttg_contextual_button{
+   background-color: inherit;
+   border:           none;
+}
+button.ttg_language_button.active, button.ttg_contextual_button.active, #ttg_donate.active{
+   color: #7b3337; /* #f7eb28; */
+}
+button.ttg_language_button:hover, button.ttg_contextual_button:hover, button.ttg_show_button:hover, #ttg_donate:hover{
+   background-color: #e59138; /*#da8153;*/
+}
+
+/* buttons bij de schema's */
+button.ttg_show_button.active{
+   color: black;
+}
+
+#ttg_pic{
+   position:  relative;  /* relative here ... */
+}
+#ttg_print_button{
+   display:  inline;
+   right:    2em;
+   position: absolute;  /* ... and absolute here  otherwize it does not work */
+   bottom:   8px;
+}
+#ttg_redo_button{
+   display:  inline;
+   right:    10em;
+   position: absolute;  /* ... and absolute here  otherwize it does not work */
+   bottom:   8px;
+}
+#ttg_undo_button{
+   display:  inline;
+   right:    16em;
+   position: absolute;  /* ... and absolute here  otherwize it does not work */
+   bottom:   8px;
+}
+#ttg_clear_button{
+   display:  inline;
+   left:     5em;
+   position: absolute;  /* ... and absolute here  otherwize it does not work */
+   bottom:   8px;
+}
+html{
+   overflow-y: scroll;
+}
