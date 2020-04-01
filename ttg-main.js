@@ -77,7 +77,7 @@ function waitForTextready(){
 	       //Textready = undefined;
 	       make_trans();
 	       //waitForTextready();
-	       init2();
+		   init2();
 	    });
       }
 
@@ -146,7 +146,11 @@ function init2()
 	 var a=[1,2,3,4,5];
 	 mydoit(a);
 	 console.log("a:", a);
-      }
+	 // bvw test autostart
+	 // doit(START);
+	 STATE = STARTING;
+	 doit(EXAMPLE);
+	  }
    );
 }
 

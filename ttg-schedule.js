@@ -318,7 +318,7 @@ function schedule_html(what)
 	 page += '<div style="height:0.5em"> </div>';
       }
    }
-
+   /*  bvw suppress score form
    if (what == "all" || what == "form")
    {
       if (what == "all")
@@ -384,6 +384,7 @@ function schedule_html(what)
 	    page += '<br>';
       }
    }
+   // end suppress score form */
    return page;
 }
 

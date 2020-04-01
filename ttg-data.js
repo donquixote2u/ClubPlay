@@ -283,9 +283,45 @@ function start_import()
       .html(tr("CANCEL"));
 
    $("#ttg_importdata_hidden").change(
+      function() {
+      import_data(this);
+      }
+      /*
       function () 
       {
-	 // init();
+	   // init();
+      var fr = new FileReader();
+      fr.onload = function () 
+	   {
+	    Inputdata = this.result;
+	    var tmp_data  = read_input(Inputdata);
+	    if (tmp_data.NOTVALID)
+	    {
+	       clear_messages();
+	       Messages.push(tr("The file chosen is not a file created by alracTTG."));
+	       Messages.push(tr("Try again.")); 
+	       show_messages();
+	       return;
+	    }
+
+	    Ttg_data = tmp_data;
+	    process_input(Ttg_data);
+	    Saved_data = deepcopy(Ttg_data);
+	    tab_status_all(true,true);
+	    $(".tablinks").removeClass("active");
+	    $("#ttg_tab_edit").addClass("active");
+
+	    edits_init();
+	    doit(EDIT);
+	   };
+	   fr.readAsText(this.files[0]);
+	   Filename = this.files[0].name;
+      }
+      */
+   );
+}
+function import_data(inp) // bvw create import function to replay anon func
+{
 	 var fr = new FileReader();
 	 fr.onload = function () 
 	 {
@@ -309,40 +345,10 @@ function start_import()
 
 	    edits_init();
 	    doit(EDIT);
-	 };
-	 fr.readAsText(this.files[0]);
-	 Filename = this.files[0].name;
-      }
-   );
-}
-function import_data()
-{
-		 var fr = new FileReader();
-	 fr.onload = function () 
-	 {
-	    Inputdata = this.result;
-	    var tmp_data  = read_input(Inputdata);
-	    if (tmp_data.NOTVALID)
-	    {
-	       clear_messages();
-	       Messages.push(tr("The file chosen is not a file created by alracTTG."));
-	       Messages.push(tr("Try again.")); 
-	       show_messages();
-	       return;
-	    }
-
-	    Ttg_data = tmp_data;
-	    process_input(Ttg_data);
-	    Saved_data = deepcopy(Ttg_data);
-	    tab_status_all(true,true);
-	    $(".tablinks").removeClass("active");
-	    $("#ttg_tab_edit").addClass("active");
-
-	    edits_init();
-	    doit(EDIT);
-	 };
-	 fr.readAsText(this.files[0]);
-	 Filename = this.files[0].name;
+    };
+    Filename = inp.files[0].name;
+    console.log("file:",inp.files[0]);
+	 return fr.readAsText(inp.files[0]);
 }
 	
 function create_messages(data)
