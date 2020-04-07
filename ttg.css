@@ -40,30 +40,45 @@ body {
 }
 
 /* delete buttons in editor: */
+/*
 .ttg_edit_delbutton{
 }
 
 .ttg_edit_delbutton:hover{
 }
-
+*/
 /* sort buttons in editor: */
+/*
 .ttg_edit_sortbutton{
 }
 .ttg_edit_sortbutton:hover{
 }
+*/
+/*bvw status buttons in editor: */
+/*
+.ttg_edit_statusbutton{
+   }
+.ttg_edit_statusbutton:hover{
+}
+*/
+.ttg_edit_statusbutton:checked{
+   background-color: #c6fac6;   
+}
 
 /* gender buttons in editor: */
+/*
 .ttg_edit_genderbutton{
 }
 .ttg_edit_genderbutton:hover{
 }
-
+*/
 /* strength buttons in editor: */
+/*
 .ttg_edit_strengthbutton{
 }
 .ttg_edit_strengthbutton:hover{
 }
-
+*/
 /* checkbox for timetable in editor */
 /* if this gives your trouble, remove this */
 /* input[type='checkbox'].ttg_edit_timetable_button{ */

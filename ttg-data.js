@@ -6,7 +6,6 @@ function show_input(data,where)
    $("#"+where).hide().html(format_input(data)).slideDown(Fade_time);
 }
 
-
 // returns a html-ized version of data
 // data as described in ttg_globals.js
 function format_input(data)
@@ -39,14 +38,19 @@ function format_input(data)
       + '\r\n<table class="center">'
       + "\r\n<caption>"+emph(tr("Players"))+"</caption>"
       + "\r\n<tr>"
-      + "<th>"+tr("No")+"</th><th>"+tr("Name")+"</th><th>"+tr("Surname")+"</th><th>&nbsp;"+tr("m/f")+"</th><th>"+tr("strength")+"</th>"
+      + "<th>"+tr("No")+"</th><th>"
+      + tr("In")+"</th><th>" // bvw show status
+      +tr("Name")+"</th><th>"+tr("Surname")+"</th><th>&nbsp;"+tr("m/f")+"</th><th>"+tr("strength")+"</th>"
       + "\r\n</tr>";
    for (var i=0; i<data.players.length; i++)
    {
+      // bvw option: filter players on status or display status here?
       var p = data.players[i];
       page += ""
 	 + '<tr>'
-	 + sprintf('<td style="text-align: right"> %d </td>\r\n',i+1)
+    + sprintf('<td style="text-align: right"> %d </td>\r\n',i+1)
+    // bvw show status
+    + sprintf('<td> %s </td>\r\n',p.status)
 	 + sprintf('<td style="text-align:left;">      %s</td>\r\n',es(p.name))
 	 + sprintf('<td style="text-align:left;">%s</td>\r\n',es(p.surname))
 	 + sprintf('<td style="text-align: center">%s</td>\r\n',es({m:tr("m"),f:tr("f")}[p.gender]))
@@ -320,7 +324,7 @@ function start_import()
       */
    );
 }
-function import_data(inp) // bvw create import function to replay anon func
+function import_data(inp) // bvw create import function to replace anon func
 {
 	 var fr = new FileReader();
 	 fr.onload = function () 
@@ -347,7 +351,7 @@ function import_data(inp) // bvw create import function to replay anon func
 	    doit(EDIT);
     };
     Filename = inp.files[0].name;
-    console.log("file:",inp.files[0]);
+    console.log("read:",Filename);
 	 return fr.readAsText(inp.files[0]);
 }
 	

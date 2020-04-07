@@ -64,11 +64,16 @@ function edit_end()
       var s="ttg_edit_player_";
       var player = $("#"+s+"name"+i);
       if (player.length == 0) break;
+      // bvw add player status flag
+      var status   = $("#"+s+"status"+i+":checked")  .val();
       var name     = $("#"+s+"name"+i)               .val();
       var surname  = $("#"+s+"surname"+i)            .val();
       var gender   = $("#"+s+"gender"+i+":checked")  .val();
       var strength = myparseInt($("#"+s+"strength"+i+":checked").val());
-      u.players.push({name:name, surname:surname, gender:gender, strength:strength});
+      // bvw add player status flag (In/Out)
+      // was u.players.push({name:name, surname:surname, gender:gender, strength:strength});
+      // console.log(name,status);
+      u.players.push({status:status, name:name, surname:surname, gender:gender, strength:strength});
    }
 
    // weight
@@ -245,6 +250,7 @@ function edit(fade)
       + '\r\n<caption>'+emph(tr("Enter the information about the players here"))+' ('+tr("Number of players")+': '+e.players.length+')'+'</caption>'
       + '<tr>'
       + '<th>'+tr("No")+'</th>'
+      + '<th  style="width:6em;" colspan="2">'+tr("In/Out")+'</th>'  // bvw add status col
       + '<th>'+tr("Name")+'&nbsp;<button class="tooltip ttg_edit_sortbutton" onclick="edit_sort_players('+"'name'"    +')">'+sortarrow+'     <span class="tooltiptext">'+tr("Click to sort by first name")+'</span></button></th>'
       + '<th>'+tr("Surname")+'&nbsp;<button class="tooltip ttg_edit_sortbutton" onclick="edit_sort_players('+"'surname'" +')">'+sortarrow+'  <span class="tooltiptext">' +tr("Click to sort by last name")+'</span></button></th>'
       + '<th colspan="2">'+tr("m/f")+'&nbsp;<button class="tooltip ttg_edit_sortbutton" onclick="edit_sort_players('+"'gender'"  +')">'+sortarrow+'      <span class="tooltiptext">' +tr("Click to sort by gender")+'</span></button></th>'
@@ -257,8 +263,12 @@ function edit(fade)
    for (var i=0; i<e.players.length; i++)
    {
       var p = e.players[i];
-
-      var s         = {m:"",f:"",1:"",2:"",3:""};
+      // bvw set status as well
+      if ( p.status!="I" ) p.status="O"; 
+      // var s         = {m:"",f:"",1:"",2:"",3:""};
+      var s         = {I:"",O:"",m:"",f:"",1:"",2:"",3:""};
+      // bvw set status
+      s[p.status] = checked;
       s[p.gender]   = checked;
       s[p.strength] = checked;
 
@@ -266,7 +276,10 @@ function edit(fade)
 
       page += '<tr>'
 	 + sprintf('<td id="ttg_edit_player_nr%d">%d</td>',i,i+1)
-
+      // bvw add status field
+	 + sprintf('<td><label><input value="I" type="radio" name="ttg_edit_player_status%d" id="ttg_edit_player_status%d"%s><span class="ttg_edit_statusbutton">'+"I"+'</span></label></td>',i,i,s["I"])
+	 + sprintf('<td><label><input value="O" type="radio" name="ttg_edit_player_status%d" id="ttg_edit_player_status%d"%s><span class="ttg_edit_statusbutton">'+"O"+'</span></label></td>',i,i,s["O"])
+	
 	 + sprintf('<td><input class="intext" type="text" value="%s" id="ttg_edit_player_name%d"   ></td>',es(p.name),i)
 	 + sprintf('<td><input class="intext" type="text" value="%s" id="ttg_edit_player_surname%d"></td>',es(p.surname),i)
 

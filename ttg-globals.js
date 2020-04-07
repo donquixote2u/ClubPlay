@@ -12,24 +12,32 @@ var Ttg_data_start = {
    players:                  // array of players
    [
       {
+    // bvw add status flag
+    status:   "O",      // players status:  out/in
 	 name:     "",       // player's name
 	 surname:  "",       // player's surname
 	 gender:   "m",      // player's gender (m/f)
 	 strength:  2        // player's strength: 1(weak), 2(average), 3(strong)
       },
       {
+    // bvw add status flag
+    status:   "O",      // players status:  out/in
 	 name:     "",           
 	 surname:  "",        
 	 gender:   "m",        
 	 strength:  2        
       },
       {
+    // bvw add status flag
+    status:   "O",      // players status:  out/in
 	 name:     "",        
 	 surname:  "",     
 	 gender:   "m",    
 	 strength: 2   
       },
       {
+    // bvw add status flag
+    status:   "O",      // players status:  out/in
 	 name:     "",       
 	 surname:  "",    
 	 gender:   "m",    
@@ -66,7 +74,9 @@ var Best_tt              = [];
 var Courts               = [];
 var Default_court        = {name:""};
 var Default_language     = 'EN';
-var Default_player       = {name:"", surname:"", gender:"m", strength:2};
+// bvw add status flag
+// was var Default_player       = {name:"", surname:"", gender:"m", strength:2};
+var Default_player       = {status:"O", name:"", surname:"", gender:"m", strength:2};
 var Default_time         = {time:"", courts:[]};
 var Computing            = false;
 var Compute_time         = 1;

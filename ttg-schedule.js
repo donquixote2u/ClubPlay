@@ -17,7 +17,8 @@ function show_result(what)
       $("#"+Page_id).html("");
       return;
    }
-
+   // bvw insert filter on players with status of "In"
+   Ttg_data.players=players_in(Ttg_data.players);
    data_to_globals(Ttg_data);
    var timetablelength = Timetable.length;
    Court_usage = create_court_usage(Ppg,Timetable,Best_tt,Courts.length);
@@ -392,6 +393,8 @@ function schedule_csv()
 {
    var lines = [];
    data_to_globals(Ttg_data);
+   // bvw add filter to get only players with status In  WRONG PLACE?
+   // Players = Players_In(deepcopy(Ttg_data.players));
    Players = deepcopy(Ttg_data.players);
    for (var i=0; i<Players.length; i++)
    {
@@ -726,3 +729,16 @@ function create_timetable_html()
    page += '</table>';
    return page;
 }
+// bvw add filter function to only present players that have the status of "In"
+function players_in(Players)
+{
+	var players_in=[];
+	for (var i=0; i<Players.length; i++)
+	{
+		if(Players[i].status=="I") 
+	   {players_in.push(Players[i]);}
+	}
+	return players_in;   
+}
+
+

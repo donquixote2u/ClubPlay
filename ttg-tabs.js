@@ -366,7 +366,8 @@ function tabs_init()
       + '   <button id="ttg_tab_edit"    class="tablinks"></button>\r\n'
       + '   <button id="ttg_tab_export"  class="tablinks"></button>\r\n'
       + '   <button id="ttg_tab_result"  class="tablinks"></button>\r\n'
-      + '   <button id="ttg_tab_score"   class="tablinks"></button>\r\n'
+      // bvw suppressed 20200401 
+      // + '   <button id="ttg_tab_score"   class="tablinks"></button>\r\n'
       + '   <button id="ttg_tab_intro"   class="tablinks"></button>\r\n'
       + '   <button id="ttg_tab_about"   class="tablinks"></button>\r\n'
       + '<br>'

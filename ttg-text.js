@@ -209,11 +209,13 @@ function show_intro()
       + '<br>'+ sprintf(tr("Later on, you can import it again with %s"),tr("m_import"))+'.</td></tr>'
       + item+tr("m_scheme")+     "</td><td>"+tr('Overview of various schedules such as players, tennis courts and times.')
       +             '<br>'+tr("You can have the schedules improved and printed.")
+      /* bvw scoreboard suppressed
       +             '<br>'+tr("You can print an empty score board, to be filled in by hand.")
       +             "</td></tr>"
       + item+tr("m_score_board")+'</td><td>'+tr('Enter the results of the tournament.')
       +                ' '+tr('You can print the results.')
       +                "</td></tr>"
+      */
       + item+tr("m_help")+       '</td><td>'+tr('Shows this text.')+'</td></tr>'
       + item+tr("m_about")+      '</td><td>'+tr('Shows some in-depth information about the program')
       + '<tr><td>&nbsp; </td></tr>'

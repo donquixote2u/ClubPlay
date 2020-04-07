@@ -76,9 +76,9 @@ function waitForTextready(){
 	    {
 	       //Textready = undefined;
 	       make_trans();
-	       //waitForTextready();
+		   //waitForTextready();
 		   init2();
-	    });
+		});
       }
 
 function init2()
@@ -148,9 +148,12 @@ function init2()
 	 console.log("a:", a);
 	 // bvw test autostart
 	 // doit(START);
-	 STATE = STARTING;
-	 doit(EXAMPLE);
-	  }
+	 // STATE = STARTING;
+	 // var was=Fsm[STATE-1];
+	 //	 {
+	 //	doit(EXAMPLE);
+	 //	 }
+	 }
    );
 }
 
