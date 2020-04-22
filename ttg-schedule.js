@@ -17,8 +17,10 @@ function show_result(what)
       $("#"+Page_id).html("");
       return;
    }
-   // bvw insert filter on players with status of "In"
-   Ttg_data.players=players_in(Ttg_data.players);
+   // bvw insert filter on players with status of "In" 20200411 remove - affects Edited data
+   // var tmpdata=Ttg_data;
+   // tmpdata.players=players_in(Ttg_data.players);
+   // data_to_globals(tmpdata);
    data_to_globals(Ttg_data);
    var timetablelength = Timetable.length;
    Court_usage = create_court_usage(Ppg,Timetable,Best_tt,Courts.length);
@@ -234,8 +236,10 @@ function schedule_html(what)
    {
       var playerformat = 'playershorter';
       if (Ppg == 2)
-	 playerformat = 'playerlong';
-      var ps = create_players_schedule(Players.length,Ppg,cu);
+	 	playerformat = 'playerlong';
+	  // bvw change func arg1 from players.length to Players
+	  var ps = create_players_schedule(Players,Ppg,cu);
+	  // var ps = create_players_schedule(Players.length,Ppg,cu);
       // in a table:
       // player
       //    time   court with-player <==> player & player   (ppg==4)
@@ -422,7 +426,9 @@ function schedule_csv()
       }
    }
    lines.push("");
-   var ps = create_players_schedule(Players.length,Ppg,cu);
+   // bvw change func arg1 from players.length to Players
+   var ps = create_players_schedule(Players,Ppg,cu);
+   // var ps = create_players_schedule(Players.length,Ppg,cu);
    for (var i=0; i<ps.length; i++)
    {
       lines.push(escsv((i+1)+" "+Players[i].name+" "+Players[i].surname));
@@ -497,7 +503,9 @@ function create_court_usage(ppg,p,t,ncourts)
    var k = 0;
    for (var i=0; i<nrounds; i++)
    {
-      for (var j=0; j<t[i].length; j+= ppg)
+	  // bvw 20200421 limit to players present
+	  t[i]=players_in(t[i]);
+	  for (var j=0; j<t[i].length; j+= ppg)
       {
 	 var players = [];
 	 for (var l=j; l<j+ppg; l++)
@@ -629,8 +637,13 @@ function create_court_usage(ppg,p,t,ncourts)
 // t:       ordinal of time in timetable
 // b,c,d: ordinals of players playing with player[i]
 //
-function create_players_schedule(nplayers,ppg,cu)
+// bvw change arg1 of scheduling from players.length to full players array
+function create_players_schedule(Players,ppg,cu)
+// function create_players_schedule(nplayers,ppg,cu)
 {
+   // bvw derive nplayers now; extract length from players, prev passed as arg1 20200421 changed for removal
+   // var nplayers = players_in(Players).length;
+   var nplayers = Players.length;
    var ps = [];
    for (var i=0; i<nplayers; i++)
       ps.push([]);
@@ -660,8 +673,11 @@ function create_players_schedule(nplayers,ppg,cu)
 		  case 2: q.push(p[3]); q.push(p[0]); q.push(p[1]); break;
 		  case 3: q.push(p[2]); q.push(p[0]); q.push(p[1]); break;
 	       }
-	    }
-	    ps[p[k]].push({court:j,time:i,players:q});
+		}
+		// bvw add check for valid present player index
+		if (ps[p[k]]) 	{
+		ps[p[k]].push({court:j,time:i,players:q});
+					} // bvw end check
 	 }
       }
    }
@@ -730,13 +746,13 @@ function create_timetable_html()
    return page;
 }
 // bvw add filter function to only present players that have the status of "In"
-function players_in(Players)
+function players_in(list)
 {
 	var players_in=[];
-	for (var i=0; i<Players.length; i++)
+	for (var i=0; i<list.length; i++)
 	{
-		if(Players[i].status=="I") 
-	   {players_in.push(Players[i]);}
+		if(Players[list[i]].status=="I") 
+	   {players_in.push(list[i]);}
 	}
 	return players_in;   
 }

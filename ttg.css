@@ -55,15 +55,11 @@ body {
 }
 */
 /*bvw status buttons in editor: */
-/*
-.ttg_edit_statusbutton{
-   }
-.ttg_edit_statusbutton:hover{
-}
-*/
-.ttg_edit_statusbutton:checked{
-   background-color: #c6fac6;   
-}
+.ttg_edit_statusbutton
+{    }
+input + span.ttg_edit_statusbuttonI { margin-left: 10px;  }
+input + span.ttg_edit_statusbuttonO { margin-left: -80px;  }
+input:checked + span.ttg_edit_statusbuttonI { background-color: #74ee74;     }
 
 /* gender buttons in editor: */
 /*
@@ -148,10 +144,11 @@ table.ttg_tips_table{
 table.ttg_tips_table td{
    text-align: left;
 }
-
+/* 
 #ttg_download_button, #ttg_importdata_button, #ttg_start_donate_button{
-   /*background-color: #00c900;*/
-}
+ }
+ */
+ 
 #ttg_computing_button_start,#ttg_computing_button_stop,#ttg_computing_button_schedule{
    height:    4em; 
    font-size: 110%
@@ -374,10 +371,12 @@ span:hover + .help {
 /* <label><input value="4" type="radio" "ttg_edit_ppg" id="ttg_edit_ppg"         ><span>d</span></input></label> */
 
 label {
+   /* removed bvw 
    display:      block; 
-   padding:      5px; 
+   padding:      5px;                 */
    position:     relative; 
-   padding-left: 20px;
+   /* removed bvw 
+   padding-left: 20px;                 */
 }
 label input {
    display:     none;

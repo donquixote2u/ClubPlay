@@ -250,7 +250,7 @@ function edit(fade)
       + '\r\n<caption>'+emph(tr("Enter the information about the players here"))+' ('+tr("Number of players")+': '+e.players.length+')'+'</caption>'
       + '<tr>'
       + '<th>'+tr("No")+'</th>'
-      + '<th  style="width:6em;" colspan="2">'+tr("In/Out")+'</th>'  // bvw add status col
+      + '<th colspan="2">'+tr("In/Out")+'</th>'  // bvw add status col
       + '<th>'+tr("Name")+'&nbsp;<button class="tooltip ttg_edit_sortbutton" onclick="edit_sort_players('+"'name'"    +')">'+sortarrow+'     <span class="tooltiptext">'+tr("Click to sort by first name")+'</span></button></th>'
       + '<th>'+tr("Surname")+'&nbsp;<button class="tooltip ttg_edit_sortbutton" onclick="edit_sort_players('+"'surname'" +')">'+sortarrow+'  <span class="tooltiptext">' +tr("Click to sort by last name")+'</span></button></th>'
       + '<th colspan="2">'+tr("m/f")+'&nbsp;<button class="tooltip ttg_edit_sortbutton" onclick="edit_sort_players('+"'gender'"  +')">'+sortarrow+'      <span class="tooltiptext">' +tr("Click to sort by gender")+'</span></button></th>'
@@ -277,8 +277,8 @@ function edit(fade)
       page += '<tr>'
 	 + sprintf('<td id="ttg_edit_player_nr%d">%d</td>',i,i+1)
       // bvw add status field
-	 + sprintf('<td><label><input value="I" type="radio" name="ttg_edit_player_status%d" id="ttg_edit_player_status%d"%s><span class="ttg_edit_statusbutton">'+"I"+'</span></label></td>',i,i,s["I"])
-	 + sprintf('<td><label><input value="O" type="radio" name="ttg_edit_player_status%d" id="ttg_edit_player_status%d"%s><span class="ttg_edit_statusbutton">'+"O"+'</span></label></td>',i,i,s["O"])
+	 + sprintf('<td class="ttg_edit_statusbutton"><label><input value="I" type="radio" name="ttg_edit_player_status%d" id="ttg_edit_player_status%d"%s><span class="ttg_edit_statusbuttonI">'+"I"+'</span></label></td>',i,i,s["I"])
+	 + sprintf('<td class="ttg_edit_statusbutton"><label><input value="O" type="radio" name="ttg_edit_player_status%d" id="ttg_edit_player_status%d"%s><span class="ttg_edit_statusbuttonO">'+"O"+'</span></label></td>',i,i,s["O"])
 	
 	 + sprintf('<td><input class="intext" type="text" value="%s" id="ttg_edit_player_name%d"   ></td>',es(p.name),i)
 	 + sprintf('<td><input class="intext" type="text" value="%s" id="ttg_edit_player_surname%d"></td>',es(p.surname),i)
